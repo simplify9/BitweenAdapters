@@ -21,6 +21,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Handlers", "Handlers", "{CE
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Receivers", "Receivers", "{6578BC40-6098-449D-B40F-83F4B7522D32}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Mappers", "Mappers", "{2A54E543-6903-4E9A-955D-204CF2B7E64F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Mappers.JsonToDelimited", "SW.InfolinkAdapters.Mappers.JsonToDelimited\SW.InfolinkAdapters.Mappers.JsonToDelimited.csproj", "{AB899F6D-592C-449C-92B6-9449929B4FC5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Mappers.JsonToDelimited.UnitTests", "SW.InfolinkAdapters.Mappers.JsonToDelimited.UnitTests\SW.InfolinkAdapters.Mappers.JsonToDelimited.UnitTests.csproj", "{9ADE38DA-E761-40BA-9A3A-A28AADC87C5B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Handlers.S3", "SW.InfolinkAdapters.Handlers.S3\SW.InfolinkAdapters.Handlers.S3.csproj", "{03347458-D414-482A-89D6-53BA7CCB82B3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Handlers.S3.UnitTests", "SW.InfolinkAdapters.Handlers.S3.UnitTests\SW.InfolinkAdapters.Handlers.S3.UnitTests.csproj", "{2D7BE140-BFD9-41B2-A677-30D8F1D88CC6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,6 +61,22 @@ Global
 		{471BF796-B5B8-43ED-A4BA-CEB8834E3451}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{471BF796-B5B8-43ED-A4BA-CEB8834E3451}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{471BF796-B5B8-43ED-A4BA-CEB8834E3451}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB899F6D-592C-449C-92B6-9449929B4FC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB899F6D-592C-449C-92B6-9449929B4FC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB899F6D-592C-449C-92B6-9449929B4FC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB899F6D-592C-449C-92B6-9449929B4FC5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9ADE38DA-E761-40BA-9A3A-A28AADC87C5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9ADE38DA-E761-40BA-9A3A-A28AADC87C5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9ADE38DA-E761-40BA-9A3A-A28AADC87C5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9ADE38DA-E761-40BA-9A3A-A28AADC87C5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03347458-D414-482A-89D6-53BA7CCB82B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03347458-D414-482A-89D6-53BA7CCB82B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03347458-D414-482A-89D6-53BA7CCB82B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03347458-D414-482A-89D6-53BA7CCB82B3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D7BE140-BFD9-41B2-A677-30D8F1D88CC6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D7BE140-BFD9-41B2-A677-30D8F1D88CC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D7BE140-BFD9-41B2-A677-30D8F1D88CC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D7BE140-BFD9-41B2-A677-30D8F1D88CC6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -62,6 +88,10 @@ Global
 		{AB9444C4-4589-4B75-890E-B7C35A8E52FF} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
 		{2C5CEC07-D137-4954-A9FE-EB80546D3D2A} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
 		{471BF796-B5B8-43ED-A4BA-CEB8834E3451} = {6578BC40-6098-449D-B40F-83F4B7522D32}
+		{AB899F6D-592C-449C-92B6-9449929B4FC5} = {2A54E543-6903-4E9A-955D-204CF2B7E64F}
+		{9ADE38DA-E761-40BA-9A3A-A28AADC87C5B} = {2A54E543-6903-4E9A-955D-204CF2B7E64F}
+		{03347458-D414-482A-89D6-53BA7CCB82B3} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
+		{2D7BE140-BFD9-41B2-A677-30D8F1D88CC6} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0190D17A-18D8-4A36-AA09-B479F944496E}
