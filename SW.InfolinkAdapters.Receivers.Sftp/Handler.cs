@@ -9,7 +9,7 @@ using Rebex.Net;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
-namespace SW.InfolinkAdapters.Receivers.SftpRec
+namespace SW.InfolinkAdapters.Receivers.SftpReceiver
 {
     class Handler : IInfolinkReceiver
     {

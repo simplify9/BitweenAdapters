@@ -1,7 +1,7 @@
 ﻿using SW.Serverless.Sdk;
 using System.Threading.Tasks;
 
-namespace SW.InfolinkAdapters.Receivers.SftpRec
+namespace SW.InfolinkAdapters.Receivers.SftpReceiver
 {
     public class Program 
     {
