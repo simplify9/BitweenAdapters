@@ -1,4 +1,4 @@
-namespace SW.Infolink.Handler.Http
+namespace SW.InfolinkAdapters.Handlers.Http
 {
     public class UserLoginModel
     {

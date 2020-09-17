@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using SW.Serverless.Sdk;
 
-namespace SW.Infolink.Handler.Http
+namespace SW.InfolinkAdapters.Handlers.Http
 {
     class Program
     {

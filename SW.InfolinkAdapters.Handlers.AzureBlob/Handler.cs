@@ -2,17 +2,18 @@
 using SW.Serverless.Sdk;
 using System;
 using System.Threading.Tasks;
+using SW.PrimitiveTypes;
 
-namespace SW.Infolink.AzureBlobFileHandler
+namespace SW.InfolinkAdapters.Handlers.AzureBlob
 {
     public class Handler : IInfolinkHandler
     {
-        public async Task<object> Handle(XchangeFile xchangeFile)
+        public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
-            var _storageAccount = CloudStorageAccount.Parse(Runner.StartupValues.GetOrDefault("BlobStorageAdaptor.ConnectionString", "DefaultEndpointsProtocol=https;AccountName=bcrm1;AccountKey=n+taOdDuZf9nJxp13qO/C/YF1tMH23ulnDrKIHzKZa+/W0kQztWFhNQs1K0Zvq+21YSVu/IQAtxi+Wzuju0TAg==;EndpointSuffix=core.windows.net"));
+            var _storageAccount = CloudStorageAccount.Parse(Runner.StartupValueOf("BlobStorageAdaptor.ConnectionString"));
             var _client = _storageAccount.CreateCloudBlobClient();
-            var _container = _client.GetContainerReference(Runner.StartupValues.GetOrDefault("BlobStorageAdaptor.ContainerName", "customers-out"));
-            var _blockBlob = _container.GetBlockBlobReference(DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "." + Runner.StartupValues.GetOrDefault("BlobStorageAdaptor.FileExtension", "csv"));
+            var _container = _client.GetContainerReference(Runner.StartupValueOf("BlobStorageAdaptor.ContainerName"));
+            var _blockBlob = _container.GetBlockBlobReference(DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "." + Runner.StartupValueOf("BlobStorageAdaptor.FileExtension"));
             await _blockBlob.UploadTextAsync(xchangeFile.Data);
             return new XchangeFile(string.Empty);
         }

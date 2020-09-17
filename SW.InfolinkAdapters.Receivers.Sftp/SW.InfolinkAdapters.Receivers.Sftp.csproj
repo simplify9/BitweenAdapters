@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SimplyWorks.Serverless.Sdk" Version="2.0.14" />
     <PackageReference Include="Rebex.Sftp" Version="5.0.7501" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SW.InfolinkAdapters.Common\SW.InfolinkAdapters.Common.csproj" />
   </ItemGroup>
 
 

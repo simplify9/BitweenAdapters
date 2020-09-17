@@ -4,7 +4,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
-namespace SW.Infolink.Handler.Http.UnitTests
+namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
 {
     [TestClass]
     public class UnitTest1

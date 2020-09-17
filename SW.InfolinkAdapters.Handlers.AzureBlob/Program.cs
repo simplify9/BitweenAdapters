@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using SW.Serverless.Sdk;
 
-namespace SW.Infolink.AzureBlobFileHandler
+namespace SW.InfolinkAdapters.Handlers.AzureBlob
 {
     public class Program
     {
