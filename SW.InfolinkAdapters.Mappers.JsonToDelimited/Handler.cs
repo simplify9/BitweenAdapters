@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -15,13 +16,13 @@ namespace SW.InfolinkAdapters.Mappers.JsonToDelimited
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
             StringWriter csvString = new StringWriter();
-            using (var csv = new CsvWriter(csvString))
+            using (var csv = new CsvWriter(csvString, CultureInfo.InvariantCulture))
             {
 
                 csv.Configuration.Delimiter = Runner.StartupValueOf("JsonToCsvAdapter.Delimiter");
 
                 JToken jToken = JObject.Parse(xchangeFile.Data);
-                var doc = jToken.SelectToken(Runner.StartupValueOf("JsonToCsvAdapter.DataPath"));
+                var doc = jToken.SelectToken(Runner.StartupValueOf("JsonToCsvAdapter.DataPath")).ToString();
 
                 if (!doc.StartsWith("["))
                     doc = "[" + doc + "]";
