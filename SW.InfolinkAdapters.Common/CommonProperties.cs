@@ -18,6 +18,8 @@ namespace SW.InfolinkAdapters
         public const string BatchSize = "BatchSize";
         public const string DataReturnType = "DataReturnType";
         public const string DeleteMovesFileTo = "DeleteMovesFileTo";
+        public const string ConnectionString = "ConnectionString";
+        public const string FileName = "FileName";
 
     }
 }
