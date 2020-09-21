@@ -20,6 +20,7 @@ namespace SW.InfolinkAdapters
         public const string DeleteMovesFileTo = "DeleteMovesFileTo";
         public const string ConnectionString = "ConnectionString";
         public const string FileName = "FileName";
+        public const string FileExtension = "FileExtension";
 
     }
 }

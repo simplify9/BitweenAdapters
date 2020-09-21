@@ -14,8 +14,8 @@ namespace SW.InfolinkAdapters.Handlers.AzureBlob
         {
             Runner.Expect(CommonProperties.ConnectionString);
             Runner.Expect(CommonProperties.TargetPath);
-            Runner.Expect("FileName","");
-            Runner.Expect("FileExtension", "csv");
+            Runner.Expect(CommonProperties.FileName,"");
+            Runner.Expect(CommonProperties.FileExtension, "csv");
         }
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
@@ -25,10 +25,10 @@ namespace SW.InfolinkAdapters.Handlers.AzureBlob
                 throw new Exception("Container not found");  
 
             var fileName = "";
-            if (Runner.StartupValueOf("FileName") != "")
+            if (Runner.StartupValueOf(CommonProperties.FileName) != "")
                 fileName = Runner.StartupValueOf("FileName");
             else
-                fileName = string.Concat(DateTime.UtcNow.ToString("yyyyMMddHHmmss"), ".", Runner.StartupValueOf("FileExtension"));
+                fileName = string.Concat(DateTime.UtcNow.ToString("yyyyMMddHHmmss"), ".", Runner.StartupValueOf(CommonProperties.FileExtension));
 
             var _blockBlob = _client.GetBlobClient(fileName);
             byte[] byteArray = Encoding.Unicode.GetBytes(xchangeFile.Data);
