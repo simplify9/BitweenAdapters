@@ -12,6 +12,12 @@ namespace SW.InfolinkAdapters.Mappers.JsonToDelimited
   public  class Handler : IInfolinkHandler
     
     {
+        public Handler()
+        {
+            
+            Runner.Expect(CommonProperties.TargetPath);
+            Runner.Expect(CommonProperties.FieldsDelimiter,",");
+        }
 
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
@@ -19,10 +25,10 @@ namespace SW.InfolinkAdapters.Mappers.JsonToDelimited
             using (var csv = new CsvWriter(csvString, CultureInfo.InvariantCulture))
             {
 
-                csv.Configuration.Delimiter = Runner.StartupValueOf("JsonToCsvAdapter.Delimiter");
+                csv.Configuration.Delimiter = Runner.StartupValueOf(CommonProperties.FieldsDelimiter);
 
                 JToken jToken = JObject.Parse(xchangeFile.Data);
-                var doc = jToken.SelectToken(Runner.StartupValueOf("JsonToCsvAdapter.DataPath")).ToString();
+                var doc = jToken.SelectToken(Runner.StartupValueOf(CommonProperties.TargetPath)).ToString();
 
                 if (!doc.StartsWith("["))
                     doc = "[" + doc + "]";

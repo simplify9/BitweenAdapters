@@ -23,6 +23,7 @@ namespace SW.InfolinkAdapters
         public const string FolderName = "FolderName";
         public const string FileName = "FileName";
         public const string FileExtension = "FileExtension";
+        public const string FieldsDelimiter = "FieldsDelimiter";
 
     }
 }
