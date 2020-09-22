@@ -14,6 +14,7 @@ namespace SW.InfolinkAdapters.Handlers.S3
             Runner.Expect(CommonProperties.LicenseKeySecret);
             Runner.Expect(CommonProperties.Url);
             Runner.Expect(CommonProperties.TargetPath);
+            Runner.Expect(CommonProperties.FolderName);
             Runner.Expect(CommonProperties.FileName, "");
             Runner.Expect(CommonProperties.FileExtension, "csv");
             Runner.Expect(CommonProperties.ContentType, "text/plain");
