@@ -35,6 +35,8 @@ namespace SW.InfolinkAdapters.Receivers.AzureBlob.UnitTests
 
                 });
             await handler.Initialize();
+            var data = await handler.GetFile("20190901082620.csv");  
+            var list= await handler.ListFiles();
         }
     }
 
