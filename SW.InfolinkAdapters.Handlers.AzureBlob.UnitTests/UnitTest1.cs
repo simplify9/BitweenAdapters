@@ -30,8 +30,8 @@ namespace SW.InfolinkAdapters.Handlers.AzureBlob.UnitTests
                 new Dictionary<string, string>{ 
                     {CommonProperties.ConnectionString, config["BlobStorage:ConnectionString"]},
                     {CommonProperties.TargetPath, config["BlobStorage:ContainerName"]},
-                     {CommonProperties.FileName, config["BlobStorage:FileName"]},
-                      {CommonProperties.FileExtension, config["BlobStorage:FileExtension"]}
+                    {CommonProperties.FileName, config["FileName"]},
+                    {CommonProperties.FileExtension, config["FileExtension"]}
 
                 });
             await handler.Handle(new XchangeFile("sss", "testfile.txt"));

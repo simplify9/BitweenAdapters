@@ -27,10 +27,14 @@ namespace SW.InfolinkAdapters.Handlers.S3.UnitTests
             var handler = new Handler();
             Runner.MockRun(handler, new ServerlessOptions(),
                 new Dictionary<string, string>{
-                    {CommonProperties.ConnectionString, config["BlobStorage:ConnectionString"]},
-                    {CommonProperties.TargetPath, config["BlobStorage:ContainerName"]},
-                     {CommonProperties.FileName, config["BlobStorage:FileName"]},
-                      {CommonProperties.FileExtension, config["BlobStorage:FileExtension"]}
+                    {CommonProperties.LicenseKeySecret, config["CloudFiles:SecretAccessKey"]},
+                    {CommonProperties.LicenseKey, config["CloudFiles:AccessKeyId"]},
+                    {CommonProperties.TargetPath, config["CloudFiles:BucketName"]},
+                    {CommonProperties.Url, config["CloudFiles:ServiceUrl"]},
+                    {CommonProperties.FileName, config["FileName"]},
+                    {CommonProperties.FileExtension, config["FileExtension"]},
+                    {CommonProperties.FolderName, config["FolderName"]},
+                    {CommonProperties.ContentType, config["ContentType"]}
 
                 });
             await handler.Handle(new XchangeFile("sss", "testfile.txt"));

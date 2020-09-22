@@ -15,7 +15,7 @@ namespace SW.InfolinkAdapters.Handlers.S3
             Runner.Expect(CommonProperties.Url);
             Runner.Expect(CommonProperties.TargetPath);
             Runner.Expect(CommonProperties.FileName, "");
-            Runner.Expect(CommonProperties.FileExtension, "txt");
+            Runner.Expect(CommonProperties.FileExtension, "csv");
             Runner.Expect(CommonProperties.ContentType, "text/plain");
         }
 
@@ -40,7 +40,7 @@ namespace SW.InfolinkAdapters.Handlers.S3
             await cloudFiles.WriteTextAsync(xchangeFile.Data, new WriteFileSettings
             {
                 Key = key,
-                ContentType = CommonProperties.ContentType,
+                ContentType = Runner.StartupValueOf(CommonProperties.ContentType),
             }) ;
 
             return new XchangeFile(key, xchangeFile.Filename ); 
