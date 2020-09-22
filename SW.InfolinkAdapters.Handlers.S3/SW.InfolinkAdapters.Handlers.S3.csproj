@@ -13,11 +13,5 @@
   <ItemGroup>
     <ProjectReference Include="..\SW.InfolinkAdapters.Common\SW.InfolinkAdapters.Common.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Update="jsconfig1.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 </Project>
   

@@ -12,6 +12,7 @@ namespace SW.InfolinkAdapters
         public const string Url = "Url";
         public const string ContentType = "ContentType";
         public const string LicenseKey = "LicenseKey";
+        public const string LicenseKeySecret = "LicenseKeySecret";
         public const string Host = "Host";
         public const string Port = "Port";
         public const string TargetPath = "TargetPath";
@@ -19,6 +20,7 @@ namespace SW.InfolinkAdapters
         public const string DataReturnType = "DataReturnType";
         public const string DeleteMovesFileTo = "DeleteMovesFileTo";
         public const string ConnectionString = "ConnectionString";
+        public const string FolderName = "FolderName";
         public const string FileName = "FileName";
         public const string FileExtension = "FileExtension";
 
