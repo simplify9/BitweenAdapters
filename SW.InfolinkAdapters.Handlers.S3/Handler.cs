@@ -10,8 +10,8 @@ namespace SW.InfolinkAdapters.Handlers.S3
     {
         public Handler()
         {
-            Runner.Expect(CommonProperties.LicenseKey);
-            Runner.Expect(CommonProperties.LicenseKeySecret);
+            Runner.Expect(CommonProperties.AccessKeyId);
+            Runner.Expect(CommonProperties.SecretAccessKey);
             Runner.Expect(CommonProperties.Url);
             Runner.Expect(CommonProperties.TargetPath);
             Runner.Expect(CommonProperties.FolderName);
@@ -25,8 +25,8 @@ namespace SW.InfolinkAdapters.Handlers.S3
             using var cloudFiles = new CloudFilesService(new CloudFilesOptions
             {
 
-                AccessKeyId = Runner.StartupValueOf(CommonProperties.LicenseKey),
-                SecretAccessKey = Runner.StartupValueOf(CommonProperties.LicenseKeySecret),
+                AccessKeyId = Runner.StartupValueOf(CommonProperties.AccessKeyId),
+                SecretAccessKey = Runner.StartupValueOf(CommonProperties.SecretAccessKey),
                 ServiceUrl = Runner.StartupValueOf(CommonProperties.Url),
                 BucketName = Runner.StartupValueOf(CommonProperties.TargetPath),
 
