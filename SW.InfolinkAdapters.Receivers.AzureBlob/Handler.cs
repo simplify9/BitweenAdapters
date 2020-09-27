@@ -17,8 +17,6 @@ namespace SW.InfolinkAdapters.Receivers.AzureBlob
         {
             Runner.Expect(CommonProperties.ConnectionString);
             Runner.Expect(CommonProperties.TargetPath);
-            Runner.Expect(CommonProperties.FileName,"");
-            Runner.Expect(CommonProperties.FileExtension, "csv");
         }
 
         public  async Task DeleteFile(string fileId)

@@ -27,8 +27,8 @@ namespace SW.InfolinkAdapters.Handlers.S3.UnitTests
             var handler = new Handler();
             Runner.MockRun(handler, new ServerlessOptions(),
                 new Dictionary<string, string>{
-                    {CommonProperties.LicenseKeySecret, config["CloudFiles:SecretAccessKey"]},
-                    {CommonProperties.LicenseKey, config["CloudFiles:AccessKeyId"]},
+                    {CommonProperties.SecretAccessKey, config["CloudFiles:SecretAccessKey"]},
+                    {CommonProperties.AccessKeyId, config["CloudFiles:AccessKeyId"]},
                     {CommonProperties.TargetPath, config["CloudFiles:BucketName"]},
                     {CommonProperties.Url, config["CloudFiles:ServiceUrl"]},
                     {CommonProperties.FileName, config["FileName"]},

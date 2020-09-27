@@ -14,11 +14,11 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public Handler()
         {
             Runner.Expect("AuthType", "NoAuth");
-            Runner.Expect("ApiKey");
-            Runner.Expect("LoginUrl");
-            Runner.Expect("LoginUsername");
-            Runner.Expect("LoginPassword");
-            Runner.Expect("Url",false);
+            Runner.Expect("ApiKey","");
+            Runner.Expect("LoginUrl","");
+            Runner.Expect("LoginUsername","");
+            Runner.Expect("LoginPassword","");
+            Runner.Expect("Url");
             Runner.Expect("ContentType", "application/json");
         }
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)

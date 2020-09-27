@@ -29,9 +29,7 @@ namespace SW.InfolinkAdapters.Receivers.AzureBlob.UnitTests
             Runner.MockRun(handler, new ServerlessOptions(),
                 new Dictionary<string, string>{ 
                     {CommonProperties.ConnectionString, config["BlobStorage:ConnectionString"]},
-                    {CommonProperties.TargetPath, config["BlobStorage:ContainerName"]},
-                    {CommonProperties.FileName, config["FileName"]},
-                    {CommonProperties.FileExtension, config["FileExtension"]}
+                    {CommonProperties.TargetPath, config["BlobStorage:ContainerName"]}
 
                 });
             await handler.Initialize();
