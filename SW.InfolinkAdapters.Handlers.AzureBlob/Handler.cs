@@ -15,7 +15,7 @@ namespace SW.InfolinkAdapters.Handlers.AzureBlob
             Runner.Expect(CommonProperties.ConnectionString);
             Runner.Expect(CommonProperties.TargetPath);
             Runner.Expect(CommonProperties.FileName,"");
-            Runner.Expect(CommonProperties.FileExtension, "csv");
+            Runner.Expect(CommonProperties.FileExtension, "");
         }
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
