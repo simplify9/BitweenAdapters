@@ -14,7 +14,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public Handler()
         {
             Runner.Expect("AuthType", "NoAuth");
-            Runner.Expect("ApiKey","");
+            Runner.Expect("ApiKey", "");
             Runner.Expect("LoginUrl","");
             Runner.Expect("LoginUsername","");
             Runner.Expect("LoginPassword","");

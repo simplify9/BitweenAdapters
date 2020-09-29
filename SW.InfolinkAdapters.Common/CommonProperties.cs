@@ -25,6 +25,8 @@ namespace SW.InfolinkAdapters
         public const string FileName = "FileName";
         public const string FileExtension = "FileExtension";
         public const string FieldsDelimiter = "FieldsDelimiter";
+        public const string Template = "Template";
+
 
     }
 }

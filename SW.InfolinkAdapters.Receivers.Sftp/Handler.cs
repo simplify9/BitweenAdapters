@@ -18,18 +18,18 @@ namespace SW.InfolinkAdapters.Receivers.SftpReceiver
         string dir = string.Empty;
         string fileReturnType = string.Empty;
         int batchSize = 0;
-        
+
         public Handler()
         {
             Runner.Expect("LicenseKey");
             Runner.Expect("Host");
-            Runner.Expect("Port","22");
+            Runner.Expect("Port", "22");
             Runner.Expect("Username");
             Runner.Expect("Password");
             Runner.Expect("TargetPath");
-            Runner.Expect("BatchSize","50");
-            Runner.Expect("DataReturnType","");
-            Runner.Expect("DeleteMovesFileTo",null);
+            Runner.Expect("BatchSize", "50");
+            Runner.Expect("DataReturnType", "");
+            Runner.Expect("DeleteMovesFileTo", null);
 
         }
 
@@ -76,9 +76,9 @@ namespace SW.InfolinkAdapters.Receivers.SftpReceiver
             {
                 strdata = Encoding.UTF8.GetString(data);
             }
-             
-            
-            return new XchangeFile(strdata,fileId);
+
+
+            return new XchangeFile(strdata, fileId);
 
         }
 
