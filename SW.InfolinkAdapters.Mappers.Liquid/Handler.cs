@@ -12,7 +12,8 @@ namespace SW.InfolinkAdapters.Mappers.Liquid
     {
         public Handler()
         {
-            Runner.Expect(CommonProperties.Template);
+            Runner.Expect(CommonProperties.DataTemplate);
+            Runner.Expect(CommonProperties.FileNameTemplate, false);
         }
 
         public Task<XchangeFile> Handle(XchangeFile xchangeFile)
