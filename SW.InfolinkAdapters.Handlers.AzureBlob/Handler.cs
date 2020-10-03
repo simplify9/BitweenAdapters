@@ -31,7 +31,7 @@ namespace SW.InfolinkAdapters.Handlers.AzureBlob
                 fileName = string.Concat(DateTime.UtcNow.ToString("yyyyMMddHHmmss"), ".", Runner.StartupValueOf(CommonProperties.FileExtension));
 
             var _blockBlob = _client.GetBlobClient(fileName);
-            byte[] byteArray = Encoding.Unicode.GetBytes(xchangeFile.Data);
+            byte[] byteArray = Encoding.UTF8.GetBytes(xchangeFile.Data);
            using MemoryStream stream = new MemoryStream(byteArray);
             await _blockBlob.UploadAsync(stream);
             return new XchangeFile(string.Empty);
