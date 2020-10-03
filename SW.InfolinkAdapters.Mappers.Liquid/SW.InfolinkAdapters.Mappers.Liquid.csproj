@@ -3,19 +3,15 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.6.0" />
+    <PackageReference Include="DotLiquid" Version="2.0.361" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SW.InfolinkAdapters.Common\SW.InfolinkAdapters.Common.csproj" />
   </ItemGroup>
-
-
-
-
 
 </Project>

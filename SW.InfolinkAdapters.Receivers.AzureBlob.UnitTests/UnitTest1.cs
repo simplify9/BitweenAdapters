@@ -6,7 +6,7 @@ using SW.Serverless.Sdk;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace SW.InfolinkAdapters.Handlers.AzureBlob.UnitTests
+namespace SW.InfolinkAdapters.Receivers.AzureBlob.UnitTests
 {
     [TestClass]
     public class UnitTest1
@@ -29,12 +29,12 @@ namespace SW.InfolinkAdapters.Handlers.AzureBlob.UnitTests
             Runner.MockRun(handler, new ServerlessOptions(),
                 new Dictionary<string, string>{ 
                     {CommonProperties.ConnectionString, config["BlobStorage:ConnectionString"]},
-                    {CommonProperties.TargetPath, config["BlobStorage:ContainerName"]},
-                    {CommonProperties.FileName, config["FileName"]},
-                    {CommonProperties.FileExtension, config["FileExtension"]}
+                    {CommonProperties.TargetPath, config["BlobStorage:ContainerName"]}
 
                 });
-            await handler.Handle(new XchangeFile("sss", "testfile.txt"));
+            await handler.Initialize();
+            var data = await handler.GetFile("20190901082620.csv");  
+            var list= await handler.ListFiles();
         }
     }
 
