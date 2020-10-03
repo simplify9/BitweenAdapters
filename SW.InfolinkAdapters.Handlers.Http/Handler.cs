@@ -13,13 +13,13 @@ namespace SW.InfolinkAdapters.Handlers.Http
     {
         public Handler()
         {
-            Runner.Expect("AuthType", "NoAuth");
-            Runner.Expect("ApiKey", "");
-            Runner.Expect("LoginUrl","");
-            Runner.Expect("LoginUsername","");
-            Runner.Expect("LoginPassword","");
-            Runner.Expect("Url");
-            Runner.Expect("ContentType", "application/json");
+            Runner.Expect(CommonProperties.AuthType,null);
+            Runner.Expect(CommonProperties.ApiKey, null);
+            Runner.Expect(CommonProperties.LoginUrl,null);
+            Runner.Expect(CommonProperties.Username,null);
+            Runner.Expect(CommonProperties.Password,null);
+            Runner.Expect(CommonProperties.Url);
+            Runner.Expect(CommonProperties.ContentType, "application/json");
         }
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {

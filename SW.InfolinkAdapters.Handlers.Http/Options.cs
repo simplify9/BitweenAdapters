@@ -6,13 +6,13 @@ namespace SW.InfolinkAdapters.Handlers.Http
     {
         public Options()
         {
-            AuthType= Runner.StartupValueOf("AuthType");
-            ApiKey =  Runner.StartupValueOf("ApiKey");
-            LoginUrl = Runner.StartupValueOf("LoginUrl");
-            LoginUsername = Runner.StartupValueOf("LoginUsername");
-            LoginPassword = Runner.StartupValueOf("LoginPassword");
-            Url = Runner.StartupValueOf("Url");
-            ContentType = Runner.StartupValueOf("ContentType");
+            AuthType= Runner.StartupValueOf(CommonProperties.AuthType);
+            ApiKey =  Runner.StartupValueOf(CommonProperties.ApiKey);
+            LoginUrl = Runner.StartupValueOf(CommonProperties.LoginUrl);
+            LoginUsername = Runner.StartupValueOf(CommonProperties.Username);
+            LoginPassword = Runner.StartupValueOf(CommonProperties.Password);
+            Url = Runner.StartupValueOf(CommonProperties.Url);
+            ContentType = Runner.StartupValueOf(CommonProperties.ContentType);
         }
         
         
