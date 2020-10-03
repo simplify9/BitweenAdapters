@@ -12,7 +12,7 @@ namespace SW.InfolinkAdapters.Receivers.AzureBlob
 {
     public class Handler : IInfolinkReceiver
     {
-        BlobContainerClient _container;
+        BlobContainerClient container;
         public Handler()
         {
             Runner.Expect(CommonProperties.ConnectionString);
@@ -21,7 +21,7 @@ namespace SW.InfolinkAdapters.Receivers.AzureBlob
 
         public  async Task DeleteFile(string fileId)
         {
-            var _blockBlob = _container.GetBlobClient(fileId);
+            var _blockBlob = container.GetBlobClient(fileId);
             await _blockBlob.DeleteAsync();
             return;
         }
@@ -33,17 +33,17 @@ namespace SW.InfolinkAdapters.Receivers.AzureBlob
 
         public async Task<XchangeFile> GetFile(string fileId)
         {
-            var _blockBlob = _container.GetBlobClient(fileId);
-            var data = await _blockBlob.DownloadAsync();
+            var blockBlob = container.GetBlobClient(fileId);
+            var data = await blockBlob.DownloadAsync();
             using StreamReader reader = new StreamReader(data.Value.Content);
             return new XchangeFile(reader.ReadToEnd(), fileId);
         }
 
         public async Task Initialize()
         {
-            _container = new BlobContainerClient(Runner.StartupValueOf(CommonProperties.ConnectionString), Runner.StartupValueOf(CommonProperties.TargetPath));
+            container = new BlobContainerClient(Runner.StartupValueOf(CommonProperties.ConnectionString), Runner.StartupValueOf(CommonProperties.TargetPath));
 
-            if (_container == null)
+            if (container == null)
                 throw new Exception("Container not found");
 
         }
@@ -51,7 +51,7 @@ namespace SW.InfolinkAdapters.Receivers.AzureBlob
         public async Task<IEnumerable<string>> ListFiles()
         {
             List<string> blobNames = new List<string>();
-            await foreach (BlobItem blob in _container.GetBlobsAsync())
+            await foreach (BlobItem blob in container.GetBlobsAsync())
             {
                 blobNames.Add(blob.Name);
             }

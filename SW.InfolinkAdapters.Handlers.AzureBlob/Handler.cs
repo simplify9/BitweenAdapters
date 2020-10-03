@@ -19,9 +19,9 @@ namespace SW.InfolinkAdapters.Handlers.AzureBlob
         }
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
-            var _client = new BlobContainerClient(Runner.StartupValueOf(CommonProperties.ConnectionString), Runner.StartupValueOf(CommonProperties.TargetPath));
+            var client = new BlobContainerClient(Runner.StartupValueOf(CommonProperties.ConnectionString), Runner.StartupValueOf(CommonProperties.TargetPath));
 
-            if (_client == null)
+            if (client == null)
                 throw new Exception("Container not found");  
 
             var fileName = "";
@@ -30,7 +30,7 @@ namespace SW.InfolinkAdapters.Handlers.AzureBlob
             else
                 fileName = string.Concat(DateTime.UtcNow.ToString("yyyyMMddHHmmss"), ".", Runner.StartupValueOf(CommonProperties.FileExtension));
 
-            var _blockBlob = _client.GetBlobClient(fileName);
+            var _blockBlob = client.GetBlobClient(fileName);
             byte[] byteArray = Encoding.UTF8.GetBytes(xchangeFile.Data);
            using MemoryStream stream = new MemoryStream(byteArray);
             await _blockBlob.UploadAsync(stream);
