@@ -2,17 +2,17 @@
 using System;
 using System.Threading.Tasks;
 using SW.PrimitiveTypes;
-using Azure.Storage.Blobs;
-using System.Text;
 using System.IO;
 using System.Collections.Generic;
-using Azure.Storage.Blobs.Models;
+using Microsoft.Azure.Storage.Blob;
+using Microsoft.Azure.Storage;
+using System.Linq;
 
 namespace SW.InfolinkAdapters.Receivers.AzureBlob
 {
     public class Handler : IInfolinkReceiver
     {
-        BlobContainerClient container;
+        CloudBlobContainer container;
         public Handler()
         {
             Runner.Expect(CommonProperties.ConnectionString);
@@ -21,7 +21,7 @@ namespace SW.InfolinkAdapters.Receivers.AzureBlob
 
         public  async Task DeleteFile(string fileId)
         {
-            var _blockBlob = container.GetBlobClient(fileId);
+            var _blockBlob = container.GetBlockBlobReference(fileId);
             await _blockBlob.DeleteAsync();
             return;
         }
@@ -33,28 +33,25 @@ namespace SW.InfolinkAdapters.Receivers.AzureBlob
 
         public async Task<XchangeFile> GetFile(string fileId)
         {
-            var blockBlob = container.GetBlobClient(fileId);
-            var data = await blockBlob.DownloadAsync();
-            using StreamReader reader = new StreamReader(data.Value.Content);
-            return new XchangeFile(reader.ReadToEnd(), fileId);
+            CloudBlockBlob blobRef = container.GetBlockBlobReference(fileId);
+            var data = await blobRef.DownloadTextAsync();
+            return new XchangeFile(data, fileId);
         }
 
         public async Task Initialize()
         {
-            container = new BlobContainerClient(Runner.StartupValueOf(CommonProperties.ConnectionString), Runner.StartupValueOf(CommonProperties.TargetPath));
-
-            if (container == null)
+            var _storageAccount = CloudStorageAccount.Parse(Runner.StartupValueOf(CommonProperties.ConnectionString));
+            var _client = _storageAccount.CreateCloudBlobClient();
+            container = _client.GetContainerReference(Runner.StartupValueOf(CommonProperties.TargetPath));
+          if (container == null)
                 throw new Exception("Container not found");
 
         }
 
         public async Task<IEnumerable<string>> ListFiles()
         {
-            List<string> blobNames = new List<string>();
-            await foreach (BlobItem blob in container.GetBlobsAsync())
-            {
-                blobNames.Add(blob.Name);
-            }
+            var list = (await container.ListBlobsSegmentedAsync(null)).Results;
+            string[] blobNames = list.OfType<CloudBlockBlob>().Select(b => b.Name).ToArray();
             return blobNames;
         }
 
