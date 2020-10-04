@@ -55,13 +55,28 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 }
             }
 
-            var response = await client.PostAsync(new Uri(options.Url), new StringContent(xchangeFile.Data, Encoding.UTF8, options.ContentType));
+            HttpContent content;
+            switch (options.ContentType)
+            {
+                case "multipart/form-data":
+                    MultipartFormDataContent multipartTmp = new MultipartFormDataContent();
+                    byte[] fileContent = Encoding.UTF8.GetBytes(xchangeFile.Data);
+                    multipartTmp.Add(new ByteArrayContent(fileContent), "file", "file.csv");
+                    content = multipartTmp;
+                    break;
+                case "application/json":
+                    content = new StringContent(xchangeFile.Data, Encoding.UTF8, options.ContentType);
+                    break;
+                default:
+                    content = new StringContent(xchangeFile.Data, Encoding.UTF8, options.ContentType);
+                    break;
+            }
             
-            response.EnsureSuccessStatusCode();
+            var response = await client.PostAsync(new Uri(options.Url), content);
+            
+            //response.EnsureSuccessStatusCode();
 
-           
-
-            if (response.StatusCode == HttpStatusCode.OK)
+            if (response.IsSuccessStatusCode)
             {
                 var resp = await response.Content.ReadAsStringAsync();
                 return new XchangeFile(resp);
