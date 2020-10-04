@@ -12,12 +12,23 @@ namespace SW.InfolinkAdapters
         public const string Url = "Url";
         public const string ContentType = "ContentType";
         public const string LicenseKey = "LicenseKey";
+        public const string AccessKeyId = "AccessKeyId";
+        public const string SecretAccessKey = "SecretAccessKey";
         public const string Host = "Host";
         public const string Port = "Port";
         public const string TargetPath = "TargetPath";
         public const string BatchSize = "BatchSize";
         public const string DataReturnType = "DataReturnType";
         public const string DeleteMovesFileTo = "DeleteMovesFileTo";
+        public const string ConnectionString = "ConnectionString";
+        public const string FolderName = "FolderName";
+        public const string FileName = "FileName";
+        public const string FileExtension = "FileExtension";
+        public const string FieldsDelimiter = "FieldsDelimiter";
+        public const string DataTemplate = "DataTemplate";
+        public const string FileNameTemplate = "FileNameTemplate";
+
+
 
     }
 }

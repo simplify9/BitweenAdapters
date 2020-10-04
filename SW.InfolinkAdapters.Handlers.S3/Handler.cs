@@ -8,24 +8,41 @@ namespace SW.InfolinkAdapters.Handlers.S3
 {
   public  class Handler : IInfolinkHandler 
     {
+        public Handler()
+        {
+            Runner.Expect(CommonProperties.AccessKeyId);
+            Runner.Expect(CommonProperties.SecretAccessKey);
+            Runner.Expect(CommonProperties.Url);
+            Runner.Expect(CommonProperties.TargetPath);
+            Runner.Expect(CommonProperties.FolderName);
+            Runner.Expect(CommonProperties.FileName, "");
+            Runner.Expect(CommonProperties.FileExtension, "");
+            Runner.Expect(CommonProperties.ContentType, "text/plain");
+        }
 
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
             using var cloudFiles = new CloudFilesService(new CloudFilesOptions
             {
 
-                AccessKeyId = Runner.StartupValueOf("S3StorageAdaptor.AccessKeyId"),
-                SecretAccessKey = Runner.StartupValueOf("S3StorageAdaptor.SecretAccessKey"),
-                ServiceUrl = Runner.StartupValueOf("S3StorageAdaptor.ServiceUrl"),
-                BucketName = Runner.StartupValueOf("S3StorageAdaptor.BucketName"),
+                AccessKeyId = Runner.StartupValueOf(CommonProperties.AccessKeyId),
+                SecretAccessKey = Runner.StartupValueOf(CommonProperties.SecretAccessKey),
+                ServiceUrl = Runner.StartupValueOf(CommonProperties.Url),
+                BucketName = Runner.StartupValueOf(CommonProperties.TargetPath),
 
             });
-            var key = string.Concat(Runner.StartupValueOf("S3StorageAdaptor.Folder"), "/", DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "." + Runner.StartupValueOf("S3StorageAdaptor.FileExtension"));
+
+            var key = "";
+            if (Runner.StartupValueOf(CommonProperties.FileName) != "")
+                key = Runner.StartupValueOf("FileName");
+            else
+                key = string.Concat(Runner.StartupValueOf(CommonProperties.FolderName), "/", DateTime.UtcNow.ToString("yyyyMMddHHmmss") + "." + Runner.StartupValueOf(CommonProperties.FileExtension));
+
             await cloudFiles.WriteTextAsync(xchangeFile.Data, new WriteFileSettings
             {
                 Key = key,
-                ContentType = "text/plain"
-            });
+                ContentType = Runner.StartupValueOf(CommonProperties.ContentType),
+            }) ;
 
             return new XchangeFile(key, xchangeFile.Filename ); 
         }
