@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -56,16 +57,19 @@ namespace SW.InfolinkAdapters.Handlers.Http
             }
 
             HttpContent content;
-            switch (options.ContentType)
+            switch (options.ContentType.ToLower())
             {
+                case "application/x-www-form-urlencoded":
+                    content = new FormUrlEncodedContent(JsonConvert.DeserializeObject<Dictionary<string, string>>(xchangeFile.Data));
+                    break;
                 case "multipart/form-data":
                     MultipartFormDataContent multipartTmp = new MultipartFormDataContent();
                     byte[] fileContent = Encoding.UTF8.GetBytes(xchangeFile.Data);
-                    multipartTmp.Add(new ByteArrayContent(fileContent), "file", "file.csv");
+                    multipartTmp.Add(new ByteArrayContent(fileContent), "file", xchangeFile.Filename);
                     content = multipartTmp;
                     break;
                 case "application/json":
-                    content = new StringContent(xchangeFile.Data, Encoding.UTF8, options.ContentType);
+                    content = new StringContent(xchangeFile.Data, Encoding.UTF8, "application/json");
                     break;
                 default:
                     content = new StringContent(xchangeFile.Data, Encoding.UTF8, options.ContentType);

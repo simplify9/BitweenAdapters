@@ -46,7 +46,26 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
             var b64Data = Convert.ToBase64String(Encoding.Default.GetBytes(data));
             Assert.AreEqual(b64cleaned, b64Data);
             
+        }
 
+        [TestMethod]
+        public async Task TestUrlEncoded()
+        {
+            var handler = new Handler();
+            Runner.MockRun(handler, new ServerlessOptions(),
+                new Dictionary<string, string>{ 
+                    {"Url", "https://postman-echo.com/post" },
+                    {"ContentType", "application/x-www-form-urlencoded"}
+                });
+            var data = JsonConvert.SerializeObject(new
+            {
+                key1 = "val1",
+                key2 = "val2",
+            });
+            var rs =await handler.Handle(new XchangeFile(data));
+            var rsVals = JToken.Parse(rs.Data)["form"].ToString(Formatting.None);
+            Assert.AreEqual(rsVals, data);
+            
         }
     }
 }
