@@ -56,7 +56,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             }
 
             HttpContent content;
-            switch (options.ContentType)
+            switch (options.ContentType.ToLower())
             {
                 case "multipart/form-data":
                     MultipartFormDataContent multipartTmp = new MultipartFormDataContent();
@@ -65,7 +65,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     content = multipartTmp;
                     break;
                 case "application/json":
-                    content = new StringContent(xchangeFile.Data, Encoding.UTF8, options.ContentType);
+                    content = new StringContent(xchangeFile.Data, Encoding.UTF8, "application/json");
                     break;
                 default:
                     content = new StringContent(xchangeFile.Data, Encoding.UTF8, options.ContentType);
