@@ -65,7 +65,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 case "multipart/form-data":
                     MultipartFormDataContent multipartTmp = new MultipartFormDataContent();
                     byte[] fileContent = Encoding.UTF8.GetBytes(xchangeFile.Data);
-                    multipartTmp.Add(new ByteArrayContent(fileContent), "file", xchangeFile.Filename);
+                    multipartTmp.Add(new ByteArrayContent(fileContent), "file", xchangeFile.Filename?? "file");
                     content = multipartTmp;
                     break;
                 case "application/json":
