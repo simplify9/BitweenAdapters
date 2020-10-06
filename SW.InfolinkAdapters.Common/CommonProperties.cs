@@ -11,6 +11,7 @@ namespace SW.InfolinkAdapters
         public const string Password = "Password";
         public const string Url = "Url";
         public const string ContentType = "ContentType";
+        public const string Headers = "Headers";
         public const string LicenseKey = "LicenseKey";
         public const string AccessKeyId = "AccessKeyId";
         public const string SecretAccessKey = "SecretAccessKey";

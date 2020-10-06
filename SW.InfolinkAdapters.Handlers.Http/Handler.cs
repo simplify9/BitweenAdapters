@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -20,6 +22,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Runner.Expect(CommonProperties.Username,null);
             Runner.Expect(CommonProperties.Password,null);
             Runner.Expect(CommonProperties.Url);
+            Runner.Expect(CommonProperties.Headers);
             Runner.Expect(CommonProperties.ContentType, "application/json");
         }
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
@@ -75,11 +78,26 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     content = new StringContent(xchangeFile.Data, Encoding.UTF8, options.ContentType);
                     break;
             }
-            
-            var response = await client.PostAsync(new Uri(options.Url), content);
-            
-            //response.EnsureSuccessStatusCode();
 
+            var request = new HttpRequestMessage
+            {
+                RequestUri = new Uri(options.Url),
+                Method = HttpMethod.Post,
+                Content = content,
+            };
+
+            var headers =options.Headers?.Split(',').Select(h =>
+            {
+                var split =  h.Split(':');
+                return new KeyValuePair<string,string>(split[0], split[1]);
+            });
+
+            if (headers != null)
+                foreach (var (key, value) in headers)
+                    request.Headers.Add(key, value);
+
+            var response = await client.SendAsync(request);
+            
             if (response.IsSuccessStatusCode)
             {
                 var resp = await response.Content.ReadAsStringAsync();

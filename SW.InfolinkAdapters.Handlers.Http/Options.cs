@@ -13,6 +13,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             LoginPassword = Runner.StartupValueOf(CommonProperties.Password);
             Url = Runner.StartupValueOf(CommonProperties.Url);
             ContentType = Runner.StartupValueOf(CommonProperties.ContentType);
+            Headers = Runner.StartupValueOf(CommonProperties.Headers);
         }
         
         
@@ -28,6 +29,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public string LoginPassword { get; set; }
         public string Url { get; set; }
         public string ContentType { get; set; }
+        public string Headers { get; set; }
     }
     
 }
