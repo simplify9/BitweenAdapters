@@ -14,7 +14,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Url = Runner.StartupValueOf(CommonProperties.Url);
             ContentType = Runner.StartupValueOf(CommonProperties.ContentType);
             Headers = Runner.StartupValueOf(CommonProperties.Headers);
-            HttpMethod = Runner.StartupValueOf(CommonProperties.Verb);
+            Verb = Runner.StartupValueOf(CommonProperties.Verb);
         }
         
         
@@ -26,7 +26,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public string AuthType { get; set; }
         public string ApiKey { get; set; }
         public string LoginUrl { get; set; }
-        public string HttpMethod { get; set; }
+        public string Verb { get; set; }
         public string LoginUsername { get; set; }
         public string LoginPassword { get; set; }
         public string Url { get; set; }

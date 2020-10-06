@@ -98,7 +98,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             var request = new HttpRequestMessage
             {
                 RequestUri = new Uri(options.Url),
-                Method = HttpMethodFromString(options.HttpMethod),
+                Method = HttpMethodFromString(options.Verb),
                 Content = content,
             };
 
