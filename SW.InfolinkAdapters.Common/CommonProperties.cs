@@ -10,6 +10,7 @@ namespace SW.InfolinkAdapters
         public const string Username = "Username";
         public const string Password = "Password";
         public const string Url = "Url";
+        public const string Verb = "Verb";
         public const string ContentType = "ContentType";
         public const string Headers = "Headers";
         public const string LicenseKey = "LicenseKey";

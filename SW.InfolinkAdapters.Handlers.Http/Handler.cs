@@ -14,6 +14,21 @@ namespace SW.InfolinkAdapters.Handlers.Http
 {
     public class Handler : IInfolinkHandler
     {
+        private HttpMethod HttpMethodFromString(string method)
+        {
+            switch (method.ToLower())
+            {
+                case "get":
+                    return HttpMethod.Get;
+                case "delete":
+                    return HttpMethod.Delete;
+                case "put":
+                    return HttpMethod.Put;
+                case "post":
+                default:
+                    return HttpMethod.Post;
+            }
+        }
         public Handler()
         {
             Runner.Expect(CommonProperties.AuthType,null);
@@ -22,8 +37,9 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Runner.Expect(CommonProperties.Username,null);
             Runner.Expect(CommonProperties.Password,null);
             Runner.Expect(CommonProperties.Url);
-            Runner.Expect(CommonProperties.Headers);
+            Runner.Expect(CommonProperties.Headers, null);
             Runner.Expect(CommonProperties.ContentType, "application/json");
+            Runner.Expect(CommonProperties.Verb, "post");
         }
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
@@ -82,7 +98,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             var request = new HttpRequestMessage
             {
                 RequestUri = new Uri(options.Url),
-                Method = HttpMethod.Post,
+                Method = HttpMethodFromString(options.HttpMethod),
                 Content = content,
             };
 
@@ -93,8 +109,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
             });
 
             if (headers != null)
-                foreach (var (key, value) in headers)
-                    request.Headers.Add(key, value);
+                foreach (var keyValuePair in headers)
+                    request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
 
             var response = await client.SendAsync(request);
             

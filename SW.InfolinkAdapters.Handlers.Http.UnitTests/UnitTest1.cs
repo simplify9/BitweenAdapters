@@ -87,8 +87,6 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
                     {"Headers", headers}
                 });
             
-            Environment.SetEnvironmentVariable("Url", "https://postman-echo.com/post");
-            Environment.SetEnvironmentVariable("Headers", headers);
             var rs =await handler.Handle(new XchangeFile(""));
             
             var someheader = JToken.Parse(rs.Data)["headers"]["someheader"].Value<string>();
@@ -97,11 +95,21 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
             
             Assert.AreEqual(someheader, "SomeValue");
             Assert.AreEqual(apiKey, "Something");
-            return;
+        }
 
-
-
-
+        [TestMethod]
+        public async Task TestGet()
+        {
+            var handler = new Handler();
+            Runner.MockRun(handler, new ServerlessOptions(),
+                new Dictionary<string, string>{ 
+                    {"Url", "https://postman-echo.com/get" },
+                    {"Verb", "get"}
+                });
+            
+            var rs =await handler.Handle(new XchangeFile(""));
+            
+            
         }
     }
 }
