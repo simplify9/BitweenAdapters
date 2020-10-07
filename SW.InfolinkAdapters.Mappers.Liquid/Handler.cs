@@ -18,10 +18,8 @@ namespace SW.InfolinkAdapters.Mappers.Liquid
 
         public Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
-            //var json = JsonConvert.DeserializeObject<IDictionary<string, object>>(@"{ ""names"":[{""name"": ""John""},{""name"":""Doe""}]  }", new DictionaryConverter());
             var obj = JsonConvert.DeserializeObject<IDictionary<string, object>>(xchangeFile.Data, new DictionaryConverter());
             var jsonHash = Hash.FromDictionary(obj);
-            //var templatetest = "";
             
             var templateData = Runner.StartupValueOf(CommonProperties.DataTemplate);
             
