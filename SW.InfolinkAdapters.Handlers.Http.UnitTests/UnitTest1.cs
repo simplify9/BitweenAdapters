@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -20,14 +21,17 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
             var handler = new Handler();
             Runner.MockRun(handler, new ServerlessOptions(),
                 new Dictionary<string, string>{ 
-                    {"Url", "https://jsonplaceholder.typicode.com/posts" },
+                    {"Url", "https://postman-echo.com/post" },
                 });
-            await handler.Handle(new XchangeFile(JsonConvert.SerializeObject(new
+            var rs = await handler.Handle(new XchangeFile(JsonConvert.SerializeObject(new
             {
                 title = "Some Title.",
                 body = "Some body. Long Body.",
                 userId = 2
-            }), "testfile.txt"));
+            })));
+
+            var rsVals = JToken.Parse(rs.Data)["json"]["userId"].Value<int>();
+            Assert.AreEqual(2, rsVals);
 
         }
         [TestMethod]
@@ -65,6 +69,46 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
             var rs =await handler.Handle(new XchangeFile(data));
             var rsVals = JToken.Parse(rs.Data)["form"].ToString(Formatting.None);
             Assert.AreEqual(rsVals, data);
+            
+        }
+
+        [TestMethod]
+        public async Task TestHeaders()
+        {
+            string headers = string.Join(',', new string[]
+            {
+                "Api-Key:Something",
+                "SomeHeader:SomeValue"
+            });
+            var handler = new Handler();
+            Runner.MockRun(handler, new ServerlessOptions(),
+                new Dictionary<string, string>{ 
+                    {"Url", "https://postman-echo.com/post" },
+                    {"Headers", headers}
+                });
+            
+            var rs =await handler.Handle(new XchangeFile(""));
+            
+            var someheader = JToken.Parse(rs.Data)["headers"]["someheader"].Value<string>();
+            var apiKey = JToken.Parse(rs.Data)["headers"]["api-key"].Value<string>();
+
+            
+            Assert.AreEqual(someheader, "SomeValue");
+            Assert.AreEqual(apiKey, "Something");
+        }
+
+        [TestMethod]
+        public async Task TestGet()
+        {
+            var handler = new Handler();
+            Runner.MockRun(handler, new ServerlessOptions(),
+                new Dictionary<string, string>{ 
+                    {"Url", "https://postman-echo.com/get" },
+                    {"Verb", "get"}
+                });
+            
+            var rs =await handler.Handle(new XchangeFile(""));
+            
             
         }
     }

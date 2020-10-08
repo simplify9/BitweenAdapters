@@ -13,6 +13,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
             LoginPassword = Runner.StartupValueOf(CommonProperties.Password);
             Url = Runner.StartupValueOf(CommonProperties.Url);
             ContentType = Runner.StartupValueOf(CommonProperties.ContentType);
+            Headers = Runner.StartupValueOf(CommonProperties.Headers);
+            Verb = Runner.StartupValueOf(CommonProperties.Verb);
         }
         
         
@@ -24,10 +26,12 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public string AuthType { get; set; }
         public string ApiKey { get; set; }
         public string LoginUrl { get; set; }
+        public string Verb { get; set; }
         public string LoginUsername { get; set; }
         public string LoginPassword { get; set; }
         public string Url { get; set; }
         public string ContentType { get; set; }
+        public string Headers { get; set; }
     }
     
 }
