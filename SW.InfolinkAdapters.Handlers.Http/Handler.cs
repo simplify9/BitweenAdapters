@@ -114,15 +114,32 @@ namespace SW.InfolinkAdapters.Handlers.Http
 
             var response = await client.SendAsync(request);
 
-            if (response.IsSuccessStatusCode)
+            if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 500)
             {
                 var resp = await response.Content.ReadAsStringAsync();
-                return new XchangeFile(resp);
+
+                return (int)response.StatusCode < 400 ?
+                    new XchangeFile(resp) :
+                    new XchangeFile(resp, null, true);
             }
-            else
-            {
-                throw new Exception(response.StatusCode.ToString());
-            }
+
+            throw new Exception(response.StatusCode.ToString());
+
+
+
+
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var resp = await response.Content.ReadAsStringAsync();
+            //    return new XchangeFile(resp);
+            //}
+            //else
+            //{
+            //    throw new Exception(response.StatusCode.ToString());
+            //}
+
+
+
         }
     }
 }
