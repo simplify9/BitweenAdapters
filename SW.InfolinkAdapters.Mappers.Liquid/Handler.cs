@@ -13,23 +13,37 @@ namespace SW.InfolinkAdapters.Mappers.Liquid
         public Handler()
         {
             Runner.Expect(CommonProperties.DataTemplate);
-            Runner.Expect(CommonProperties.FileNameTemplate, false);
+            Runner.Expect(CommonProperties.FileNameTemplate, null);
         }
 
         public Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
-            //var json = JsonConvert.DeserializeObject<IDictionary<string, object>>(@"{ ""names"":[{""name"": ""John""},{""name"":""Doe""}]  }", new DictionaryConverter());
+            
             var obj = JsonConvert.DeserializeObject<IDictionary<string, object>>(xchangeFile.Data, new DictionaryConverter());
             var jsonHash = Hash.FromDictionary(obj);
-            var templatetest = "<h1>{{device}}</h1><h2>{{data.key1}}</h2>{% for client in names %}<h4>{{client.name}}</h4>{% endfor %}";
 
-            var template = Template.Parse(templatetest);
-            var render = template.Render(jsonHash);
+            var fileNameTemplate = Runner.StartupValueOf(CommonProperties.FileNameTemplate);
+            string fileName = null;
+            if (fileNameTemplate != null)
+            {
+                var fileNameTemplateData = Runner.StartupValueOf(CommonProperties.FileNameTemplate);
+            
+                var parsedFileNameTemplate = Template.Parse(fileNameTemplateData);
+            
+                fileName = parsedFileNameTemplate.Render(jsonHash);
+            }
+            
+            
+            var templateData = Runner.StartupValueOf(CommonProperties.DataTemplate);
+            
+            var parsedTemplate = Template.Parse(templateData);
+            
+            var result = parsedTemplate.Render(jsonHash);
+            
+            
+            return Task.FromResult(new XchangeFile(result,fileName));
 
-            return Task.FromResult(new XchangeFile(render));
-
-            //Template template = Template.Parse("hi {{name}}");  // Parses and compiles the template
-            //template.Render(Hash.(JsonConvert.DeserializeObject(); // Renders the output => "hi tobi"        }
+          
         }
     }
 }
