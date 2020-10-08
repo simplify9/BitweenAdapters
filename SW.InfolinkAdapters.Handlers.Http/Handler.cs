@@ -120,7 +120,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
 
                 return (int)response.StatusCode < 400 ?
                     new XchangeFile(resp) :
-                    new XchangeFile(resp, null, true);
+                    new XchangeFile(resp, badData: true);
             }
 
             throw new Exception(response.StatusCode.ToString());
