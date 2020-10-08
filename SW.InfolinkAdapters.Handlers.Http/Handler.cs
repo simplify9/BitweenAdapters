@@ -31,11 +31,11 @@ namespace SW.InfolinkAdapters.Handlers.Http
         }
         public Handler()
         {
-            Runner.Expect(CommonProperties.AuthType,null);
+            Runner.Expect(CommonProperties.AuthType, null);
             Runner.Expect(CommonProperties.ApiKey, null);
-            Runner.Expect(CommonProperties.LoginUrl,null);
-            Runner.Expect(CommonProperties.Username,null);
-            Runner.Expect(CommonProperties.Password,null);
+            Runner.Expect(CommonProperties.LoginUrl, null);
+            Runner.Expect(CommonProperties.Username, null);
+            Runner.Expect(CommonProperties.Password, null);
             Runner.Expect(CommonProperties.Url);
             Runner.Expect(CommonProperties.Headers, null);
             Runner.Expect(CommonProperties.ContentType, "application/json");
@@ -44,9 +44,9 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
             var options = new Options();
-            
+
             var client = new HttpClient();
-            
+
             if (options.AuthType == "ApiKey")
             {
                 client.DefaultRequestHeaders.Add("ApiKey", options.ApiKey);
@@ -58,7 +58,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     Email = options.LoginUsername,
                     Password = options.LoginPassword
                 });
-                
+
                 var loginResponse = await client.PostAsync(new Uri(options.LoginUrl), new StringContent(loginJson, Encoding.UTF8, "application/json"));
 
                 loginResponse.EnsureSuccessStatusCode();
@@ -67,7 +67,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 {
                     var jwt = await loginResponse.Content.ReadAsStringAsync();
                     client.DefaultRequestHeaders.Authorization =
-                        new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", jwt);
+                        new AuthenticationHeaderValue("Bearer", jwt);
                 }
                 else
                 {
@@ -84,7 +84,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 case "multipart/form-data":
                     MultipartFormDataContent multipartTmp = new MultipartFormDataContent();
                     byte[] fileContent = Encoding.UTF8.GetBytes(xchangeFile.Data);
-                    multipartTmp.Add(new ByteArrayContent(fileContent), "file", xchangeFile.Filename?? "file");
+                    multipartTmp.Add(new ByteArrayContent(fileContent), "file", xchangeFile.Filename ?? "file");
                     content = multipartTmp;
                     break;
                 case "application/json":
@@ -102,10 +102,10 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 Content = content,
             };
 
-            var headers =options.Headers?.Split(',').Select(h =>
+            var headers = options.Headers?.Split(',').Select(h =>
             {
-                var split =  h.Split(':');
-                return new KeyValuePair<string,string>(split[0], split[1]);
+                var split = h.Split(':');
+                return new KeyValuePair<string, string>(split[0], split[1]);
             });
 
             if (headers != null)
@@ -113,7 +113,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
 
             var response = await client.SendAsync(request);
-            
+
             if (response.IsSuccessStatusCode)
             {
                 var resp = await response.Content.ReadAsStringAsync();
@@ -122,7 +122,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             else
             {
                 throw new Exception(response.StatusCode.ToString());
-            }   
+            }
         }
     }
 }
