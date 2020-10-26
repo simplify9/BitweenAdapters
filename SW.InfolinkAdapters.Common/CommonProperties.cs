@@ -20,7 +20,7 @@ namespace SW.InfolinkAdapters
         public const string Port = "Port";
         public const string TargetPath = "TargetPath";
         public const string BatchSize = "BatchSize";
-        public const string DataReturnType = "DataReturnType";
+        public const string ResponseEncoding = "ResponseEncoding";
         public const string DeleteMovesFileTo = "DeleteMovesFileTo";
         public const string ConnectionString = "ConnectionString";
         public const string FolderName = "FolderName";
@@ -29,6 +29,8 @@ namespace SW.InfolinkAdapters
         public const string FieldsDelimiter = "FieldsDelimiter";
         public const string DataTemplate = "DataTemplate";
         public const string FileNameTemplate = "FileNameTemplate";
+        public const string Protocol = "Protocol";
+
 
 
 

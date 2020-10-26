@@ -1,16 +1,15 @@
-﻿using System.Threading.Tasks;
-using SW.Serverless.Sdk;
+﻿using SW.Serverless.Sdk;
+using System.Threading.Tasks;
 
-namespace SW.Infolink.FtpFileReceiver
+namespace SW.InfolinkAdapters.Receivers.SftpReceiver
 {
     public class Program 
     {
-        
+
         static async Task Main(string[] args)
         {
             await Runner.Run(new Handler());
         }
-
 
     }
 }
