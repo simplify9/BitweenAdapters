@@ -9,12 +9,12 @@ using Rebex.Net;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
-namespace SW.InfolinkAdapters.Receivers.SftpReceiver
+namespace SW.InfolinkAdapters.Receivers.Ftp
 {
     class Handler : IInfolinkReceiver
     {
-        IFtp ftpOrSftp;
-        string targetPath = string.Empty;
+        private IFtp _ftpOrSftp;
+        private string _targetPath = string.Empty;
 
         public Handler()
         {
@@ -32,15 +32,15 @@ namespace SW.InfolinkAdapters.Receivers.SftpReceiver
 
         public async Task DeleteFile(string fileId)
         {
-            if (!await ftpOrSftp.FileExistsAsync(targetPath + "/" + fileId)) return;
+            if (!await _ftpOrSftp.FileExistsAsync(_targetPath + "/" + fileId)) return;
             var deleteMovesFileTo = Runner.StartupValueOf("DeleteMovesFileTo");
             if (string.IsNullOrWhiteSpace(deleteMovesFileTo))
             {
-                await ftpOrSftp.DeleteFileAsync(targetPath + "/" + fileId);
+                await _ftpOrSftp.DeleteFileAsync(_targetPath + "/" + fileId);
             }
             else
             {
-                await ftpOrSftp.RenameAsync(targetPath + "/" + fileId,
+                await _ftpOrSftp.RenameAsync(_targetPath + "/" + fileId,
                     deleteMovesFileTo + "/" + fileId);
             }
 
@@ -48,8 +48,8 @@ namespace SW.InfolinkAdapters.Receivers.SftpReceiver
 
         public async Task Finalize()
         {
-            await ftpOrSftp.DisconnectAsync();
-            ftpOrSftp.Dispose();
+            await _ftpOrSftp.DisconnectAsync();
+            _ftpOrSftp.Dispose();
         }
 
         public async Task<XchangeFile> GetFile(string fileId)
@@ -57,7 +57,7 @@ namespace SW.InfolinkAdapters.Receivers.SftpReceiver
 
             // download a remote file into a memory stream
             await using var stream = new MemoryStream();
-            await ftpOrSftp.GetFileAsync(targetPath + "/" + fileId, stream);
+            await _ftpOrSftp.GetFileAsync(_targetPath + "/" + fileId, stream);
 
             // convert memory stream to data
             var data = stream.ToArray();
@@ -82,15 +82,15 @@ namespace SW.InfolinkAdapters.Receivers.SftpReceiver
                     var sftp = new Sftp();
                     int sftpPort = string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.Port)) ? 22 : Convert.ToInt32(Runner.StartupValueOf(CommonProperties.Port));
                     await sftp.ConnectAsync(Runner.StartupValueOf(CommonProperties.Host), sftpPort);
-                    ftpOrSftp = sftp;
+                    _ftpOrSftp = sftp;
                     break;
 
                 case "ftp":
 
-                    var ftp = new Ftp();
+                    var ftp = new Rebex.Net.Ftp();
                     int ftpPort = string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.Port)) ? 21 : Convert.ToInt32(Runner.StartupValueOf(CommonProperties.Port));
                     await ftp.ConnectAsync(Runner.StartupValueOf(CommonProperties.Host), ftpPort);
-                    ftpOrSftp = ftp;
+                    _ftpOrSftp = ftp;
                     break;
 
                 default:
@@ -99,14 +99,14 @@ namespace SW.InfolinkAdapters.Receivers.SftpReceiver
             }
 
             // authenticate
-            await ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
+            await _ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
 
-            targetPath = Runner.StartupValueOf(CommonProperties.TargetPath);
+            _targetPath = Runner.StartupValueOf(CommonProperties.TargetPath);
         }
 
         public async Task<IEnumerable<string>> ListFiles()
         {
-            var fileNames = await ftpOrSftp.GetNameListAsync(targetPath);
+            var fileNames = await _ftpOrSftp.GetNameListAsync(_targetPath);
             var batchSize = Convert.ToInt32(Runner.StartupValueOf(CommonProperties.BatchSize));
             return fileNames.Take(batchSize).ToArray();
         }

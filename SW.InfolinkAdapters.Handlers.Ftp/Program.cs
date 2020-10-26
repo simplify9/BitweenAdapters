@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using SW.Serverless.Sdk;
 
-namespace SW.Infolink.SftpFileHandler
+namespace SW.InfolinkAdapters.Handlers.Ftp
 {
     
     public class Program 
