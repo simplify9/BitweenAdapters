@@ -8,6 +8,7 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
 
         static async Task Main(string[] args)
         {
+
             await Runner.Run(new Handler());
         }
 

@@ -11,7 +11,7 @@ using SW.Serverless.Sdk;
 
 namespace SW.InfolinkAdapters.Receivers.Ftp
 {
-    class Handler : IInfolinkReceiver
+    public class Handler : IInfolinkReceiver
     {
         private IFtp _ftpOrSftp;
         private string _targetPath = string.Empty;
@@ -108,6 +108,10 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
         {
             var fileNames = await _ftpOrSftp.GetNameListAsync(_targetPath);
             var batchSize = Convert.ToInt32(Runner.StartupValueOf(CommonProperties.BatchSize));
+            
+            if (Runner.StartupValueOf(CommonProperties.Protocol).ToLower() == "ftp")
+                fileNames = fileNames.Select(f => f.Split("/").Last()).Except(new string[] { ".", ".." }).ToArray(); ;
+            
             return fileNames.Take(batchSize).ToArray();
         }
     }
