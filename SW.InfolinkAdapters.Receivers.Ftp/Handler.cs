@@ -11,10 +11,10 @@ using SW.Serverless.Sdk;
 
 namespace SW.InfolinkAdapters.Receivers.Ftp
 {
-    class Handler : IInfolinkReceiver
+    public class Handler : IInfolinkReceiver
     {
         private IFtp _ftpOrSftp;
-        private string _targetPath = string.Empty;
+        // private string _targetPath = string.Empty;
 
         public Handler()
         {
@@ -23,7 +23,7 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
             Runner.Expect(CommonProperties.Port, null);
             Runner.Expect(CommonProperties.Username);
             Runner.Expect(CommonProperties.Password);
-            Runner.Expect(CommonProperties.TargetPath, "");
+            Runner.Expect(CommonProperties.TargetPath, null);
             Runner.Expect(CommonProperties.BatchSize, "50");
             Runner.Expect(CommonProperties.ResponseEncoding, "utf8");
             Runner.Expect(CommonProperties.DeleteMovesFileTo, null);
@@ -32,16 +32,15 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
 
         public async Task DeleteFile(string fileId)
         {
-            if (!await _ftpOrSftp.FileExistsAsync(_targetPath + "/" + fileId)) return;
+            if (!await _ftpOrSftp.FileExistsAsync(fileId)) return;
             var deleteMovesFileTo = Runner.StartupValueOf("DeleteMovesFileTo");
             if (string.IsNullOrWhiteSpace(deleteMovesFileTo))
             {
-                await _ftpOrSftp.DeleteFileAsync(_targetPath + "/" + fileId);
+                await _ftpOrSftp.DeleteFileAsync(fileId);
             }
             else
             {
-                await _ftpOrSftp.RenameAsync(_targetPath + "/" + fileId,
-                    deleteMovesFileTo + "/" + fileId);
+                await _ftpOrSftp.RenameAsync(fileId, deleteMovesFileTo + "/" + fileId);
             }
 
         }
@@ -57,7 +56,7 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
 
             // download a remote file into a memory stream
             await using var stream = new MemoryStream();
-            await _ftpOrSftp.GetFileAsync(_targetPath + "/" + fileId, stream);
+            await _ftpOrSftp.GetFileAsync(fileId, stream);
 
             // convert memory stream to data
             var data = stream.ToArray();
@@ -80,6 +79,7 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
                 case "sftp":
 
                     var sftp = new Sftp();
+
                     int sftpPort = string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.Port)) ? 22 : Convert.ToInt32(Runner.StartupValueOf(CommonProperties.Port));
                     await sftp.ConnectAsync(Runner.StartupValueOf(CommonProperties.Host), sftpPort);
                     _ftpOrSftp = sftp;
@@ -101,14 +101,19 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
             // authenticate
             await _ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
 
-            _targetPath = Runner.StartupValueOf(CommonProperties.TargetPath);
+            //_targetPath = Runner.StartupValueOf(CommonProperties.TargetPath);
+            if (!string.IsNullOrEmpty(Runner.StartupValueOf(CommonProperties.TargetPath)))
+                await _ftpOrSftp.ChangeDirectoryAsync(Runner.StartupValueOf(CommonProperties.TargetPath));
         }
 
         public async Task<IEnumerable<string>> ListFiles()
         {
-            var fileNames = await _ftpOrSftp.GetNameListAsync(_targetPath);
+            var files = await _ftpOrSftp.GetListAsync();
+            //fileNames[0].
             var batchSize = Convert.ToInt32(Runner.StartupValueOf(CommonProperties.BatchSize));
-            return fileNames.Take(batchSize).ToArray();
+
+            return files.Where(i => i.IsFile).Take(batchSize).Select(i => i.Name).ToArray();
+
         }
     }
 }

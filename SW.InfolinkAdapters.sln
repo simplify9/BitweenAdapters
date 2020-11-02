@@ -41,6 +41,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Receive
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Handlers.Ftp", "SW.InfolinkAdapters.Handlers.Ftp\SW.InfolinkAdapters.Handlers.Ftp.csproj", "{FB179363-4CEF-4E0F-9100-1E0FAB036A23}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Receivers.Ftp.UnitTests", "SW.InfolinkAdapters.Receivers.Ftp.UnitTests\SW.InfolinkAdapters.Receivers.Ftp.UnitTests.csproj", "{7DAD6200-1ACA-499F-AB08-5EC97BFC45A6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -107,6 +109,10 @@ Global
 		{FB179363-4CEF-4E0F-9100-1E0FAB036A23}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB179363-4CEF-4E0F-9100-1E0FAB036A23}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB179363-4CEF-4E0F-9100-1E0FAB036A23}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7DAD6200-1ACA-499F-AB08-5EC97BFC45A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7DAD6200-1ACA-499F-AB08-5EC97BFC45A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7DAD6200-1ACA-499F-AB08-5EC97BFC45A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7DAD6200-1ACA-499F-AB08-5EC97BFC45A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -127,6 +133,7 @@ Global
 		{22D91725-DB25-4625-AE5B-7B2D09DD91C1} = {2A54E543-6903-4E9A-955D-204CF2B7E64F}
 		{B30ABC5B-6E54-430E-8009-E08AA9CCBC21} = {6578BC40-6098-449D-B40F-83F4B7522D32}
 		{FB179363-4CEF-4E0F-9100-1E0FAB036A23} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
+		{7DAD6200-1ACA-499F-AB08-5EC97BFC45A6} = {6578BC40-6098-449D-B40F-83F4B7522D32}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0190D17A-18D8-4A36-AA09-B479F944496E}
