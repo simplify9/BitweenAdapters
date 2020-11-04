@@ -19,7 +19,7 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
             Runner.Expect(CommonProperties.Username);
             Runner.Expect(CommonProperties.Password);
             Runner.Expect(CommonProperties.TargetPath, "");
-            Runner.Expect(CommonProperties.FileNamePrefix);
+            Runner.Expect(CommonProperties.FileNamePrefix,null);
             Runner.Expect(CommonProperties.Protocol, "sftp");
         }
 
@@ -59,7 +59,12 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
             var byteArray = Encoding.ASCII.GetBytes(xchangeFile.Data);
             var stream = new MemoryStream(byteArray);
             Stream str = stream;
-            var filename = Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_" + DateTime.UtcNow.Day + DateTime.UtcNow.Month + DateTime.UtcNow.Year + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second + DateTime.UtcNow.Millisecond; 
+            
+            var filename = "";
+            if (!string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.FileNamePrefix)))
+                filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_";
+            filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_" + DateTime.UtcNow.Day + DateTime.UtcNow.Month + DateTime.UtcNow.Year + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second + DateTime.UtcNow.Millisecond; 
+            
             await _ftpOrSftp.PutFileAsync(str, Runner.StartupValueOf(CommonProperties.TargetPath) + "/" + filename);
 
             await _ftpOrSftp.DisconnectAsync();
