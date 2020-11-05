@@ -18,7 +18,7 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
             Runner.Expect(CommonProperties.Port, null);
             Runner.Expect(CommonProperties.Username);
             Runner.Expect(CommonProperties.Password);
-            Runner.Expect(CommonProperties.TargetPath, "");
+            Runner.Expect(CommonProperties.TargetPath, null);
             //Runner.Expect(CommonProperties.FileNamePrefix, null);
             Runner.Expect(CommonProperties.Protocol, "sftp");
         }
