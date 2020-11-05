@@ -24,7 +24,7 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
         }
 
 
-        private IFtp _ftpOrSftp;
+        private IFtp ftpOrSftp;
 
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
@@ -38,7 +38,7 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
                     var sftp = new Sftp();
                     int sftpPort = string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.Port)) ? 22 : Convert.ToInt32(Runner.StartupValueOf(CommonProperties.Port));
                     await sftp.ConnectAsync(Runner.StartupValueOf(CommonProperties.Host), sftpPort);
-                    _ftpOrSftp = sftp;
+                    ftpOrSftp = sftp;
                     break;
 
                 case "ftp":
@@ -46,7 +46,7 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
                     var ftp = new Rebex.Net.Ftp();
                     int ftpPort = string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.Port)) ? 21 : Convert.ToInt32(Runner.StartupValueOf(CommonProperties.Port));
                     await ftp.ConnectAsync(Runner.StartupValueOf(CommonProperties.Host), ftpPort);
-                    _ftpOrSftp = ftp;
+                    ftpOrSftp = ftp;
                     break;
 
                 default:
@@ -54,11 +54,10 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
 
             }
 
-            await _ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
+            await ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
 
-            var byteArray = Encoding.UTF8.GetBytes(xchangeFile.Data);
-            using var stream = new MemoryStream(byteArray);
-            Stream str = stream;
+            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xchangeFile.Data));
+            //Stream str = stream;
 
             var filename = xchangeFile.Filename;
 
@@ -72,9 +71,9 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
             //    filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_";
             //filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_" + DateTime.UtcNow.Day + DateTime.UtcNow.Month + DateTime.UtcNow.Year + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second + DateTime.UtcNow.Millisecond;
 
-            await _ftpOrSftp.PutFileAsync(str, Runner.StartupValueOf($"{CommonProperties.TargetPath}/{filename}"));
+            await ftpOrSftp.PutFileAsync(stream, Runner.StartupValueOf($"{CommonProperties.TargetPath}/{filename}"));
 
-            await _ftpOrSftp.DisconnectAsync();
+            await ftpOrSftp.DisconnectAsync();
             return new XchangeFile(string.Empty);
 
         }
