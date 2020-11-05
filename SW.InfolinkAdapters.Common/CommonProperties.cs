@@ -30,7 +30,7 @@ namespace SW.InfolinkAdapters
         public const string DataTemplate = "DataTemplate";
         public const string FileNameTemplate = "FileNameTemplate";
         public const string Protocol = "Protocol";
-        public const string FileNamePrefix = "FileNamePrefix";
+        //public const string FileNamePrefix = "FileNamePrefix";
 
 
 

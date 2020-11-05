@@ -19,7 +19,7 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
             Runner.Expect(CommonProperties.Username);
             Runner.Expect(CommonProperties.Password);
             Runner.Expect(CommonProperties.TargetPath, "");
-            Runner.Expect(CommonProperties.FileNamePrefix,null);
+            //Runner.Expect(CommonProperties.FileNamePrefix, null);
             Runner.Expect(CommonProperties.Protocol, "sftp");
         }
 
@@ -28,7 +28,7 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
 
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
-            
+
             Rebex.Licensing.Key = Runner.StartupValueOf(CommonProperties.LicenseKey);
 
             switch (Runner.StartupValueOf(CommonProperties.Protocol).ToLower())
@@ -53,23 +53,30 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
                     throw new ArgumentException($"Unknown protocol '{Runner.StartupValueOf(CommonProperties.Protocol)}'");
 
             }
-            
+
             await _ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
-            
-            var byteArray = Encoding.ASCII.GetBytes(xchangeFile.Data);
-            var stream = new MemoryStream(byteArray);
+
+            var byteArray = Encoding.UTF8.GetBytes(xchangeFile.Data);
+            using var stream = new MemoryStream(byteArray);
             Stream str = stream;
-            
-            var filename = "";
-            if (!string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.FileNamePrefix)))
-                filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_";
-            filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_" + DateTime.UtcNow.Day + DateTime.UtcNow.Month + DateTime.UtcNow.Year + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second + DateTime.UtcNow.Millisecond; 
-            
-            await _ftpOrSftp.PutFileAsync(str, Runner.StartupValueOf(CommonProperties.TargetPath) + "/" + filename);
+
+            var filename = xchangeFile.Filename;
+
+            if (string.IsNullOrWhiteSpace(filename))
+            {
+                var currentDate = DateTime.UtcNow;
+                filename = $"{currentDate.Year:0000}{currentDate.Month:00}{currentDate.Day:00}{currentDate.Hour:00}{currentDate.Minute:00}{currentDate.Second:00}{currentDate.Millisecond:000}";
+            }
+
+            //if (!string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.FileNamePrefix)))
+            //    filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_";
+            //filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_" + DateTime.UtcNow.Day + DateTime.UtcNow.Month + DateTime.UtcNow.Year + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second + DateTime.UtcNow.Millisecond;
+
+            await _ftpOrSftp.PutFileAsync(str, Runner.StartupValueOf($"{CommonProperties.TargetPath}/{filename}"));
 
             await _ftpOrSftp.DisconnectAsync();
-            return new XchangeFile( string.Empty);
-            
+            return new XchangeFile(string.Empty);
+
         }
     }
 }
