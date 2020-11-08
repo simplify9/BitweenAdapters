@@ -20,10 +20,8 @@ namespace SW.InfolinkAdapters.Receivers.Pop3
             Runner.Expect(CommonProperties.Host);
             Runner.Expect(CommonProperties.Username);
             Runner.Expect(CommonProperties.Password);
-            Runner.Expect(CommonProperties.TargetPath, null);
             Runner.Expect(CommonProperties.BatchSize, "50");
             Runner.Expect(CommonProperties.ResponseEncoding, "utf8");
-            Runner.Expect(CommonProperties.DeleteMovesFileTo, null);
         }
         public async Task Initialize()
         {
@@ -56,16 +54,10 @@ namespace SW.InfolinkAdapters.Receivers.Pop3
             if (!int.TryParse(fileId, out var sequenceNumber)){}
             
             var message = await _pop3.GetMailMessageAsync(sequenceNumber);
-            
-           
 
             if (message.Attachments.Count < 1) return new XchangeFile(message.BodyText, message.Subject);
             var attachment = message.Attachments[0];
-            
-            //await using var stream = new MemoryStream();
-            
-            
-            
+
             await _pop3.GetMessageAsync(sequenceNumber, attachment.FileName);
 
             var stream = attachment.GetContentStream();
@@ -95,7 +87,7 @@ namespace SW.InfolinkAdapters.Receivers.Pop3
         public async Task DeleteFile(string fileId)
         {
             if (!int.TryParse(fileId, out var sequenceNumber)){}
-           // await _pop3.DeleteAsync(sequenceNumber);
+            await _pop3.DeleteAsync(sequenceNumber);
         }
     }
 }
