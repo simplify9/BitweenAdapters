@@ -83,7 +83,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     break;
                 case "multipart/form-data":
                     MultipartFormDataContent multipartTmp = new MultipartFormDataContent();
-                    byte[] fileContent = Encoding.UTF8.GetBytes(xchangeFile.Data);
+                    var data = JsonConvert.DeserializeObject<Dictionary<string, string>>(xchangeFile.Data);
+                    byte[] fileContent = Encoding.UTF8.GetBytes(data["fileContent"]);
                     multipartTmp.Add(new ByteArrayContent(fileContent), "file", xchangeFile.Filename ?? "file");
                     content = multipartTmp;
                     break;
