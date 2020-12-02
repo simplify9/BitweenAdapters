@@ -47,8 +47,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Receive
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Handlers.Mailgun", "SW.InfolinkAdapters.Handlers.Mailgun\SW.InfolinkAdapters.Handlers.Mailgun.csproj", "{EEF15107-8EE0-4161-963C-D51DA6B6D2DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Handlers.Mailgun.UnitTests", "SW.InfolinkAdapters.Handlers.Mailgun.UnitTests\SW.InfolinkAdapters.Handlers.Mailgun.UnitTests.csproj", "{CF54220B-5EB8-4E77-A207-554D86CAEB2F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,10 +125,6 @@ Global
 		{EEF15107-8EE0-4161-963C-D51DA6B6D2DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEF15107-8EE0-4161-963C-D51DA6B6D2DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EEF15107-8EE0-4161-963C-D51DA6B6D2DB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF54220B-5EB8-4E77-A207-554D86CAEB2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF54220B-5EB8-4E77-A207-554D86CAEB2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF54220B-5EB8-4E77-A207-554D86CAEB2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF54220B-5EB8-4E77-A207-554D86CAEB2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -154,7 +148,6 @@ Global
 		{0951A08E-F2A7-49F8-84BE-DDF9A81099DC} = {6578BC40-6098-449D-B40F-83F4B7522D32}
 		{29BC4A0F-221C-47D6-B90D-64262369F9BB} = {6578BC40-6098-449D-B40F-83F4B7522D32}
 		{EEF15107-8EE0-4161-963C-D51DA6B6D2DB} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
-		{CF54220B-5EB8-4E77-A207-554D86CAEB2F} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0190D17A-18D8-4A36-AA09-B479F944496E}
