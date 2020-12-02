@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -40,14 +41,14 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
             if (mailgunRequest.Template != null)
             {
                 formContent.Add(new StringContent(mailgunRequest.Template), "template");
-                formContent.Add(new StringContent(JsonConvert.SerializeObject(mailgunRequest.TemplateVariables)), "h:X-Mailgun-Variables");
+                formContent.Add(new StringContent(JsonConvert.SerializeObject(mailgunRequest.TemplateVariables)), "h:X-Mailgun-variables");
                 
                 
             }
             else if (mailgunRequest.Body != null)
             {
                 
-                formContent.Add(new StringContent(mailgunRequest.Template), "body");
+                formContent.Add(new StringContent(mailgunRequest.Body), "text");
             }
             else
             {
@@ -56,10 +57,10 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
 
             if (mailgunRequest.AttachmentLocations != null)
             {
-                foreach (string location in mailgunRequest.AttachmentLocations)
+                foreach (var pair in mailgunRequest.AttachmentLocations)
                 {
-                    Stream stream = await client.GetStreamAsync(location);
-                    formContent.Add(new StreamContent(stream), "attachment");
+                    Stream stream = await client.GetStreamAsync(pair.Value);
+                    formContent.Add(new StreamContent(stream), "attachment", pair.Key);
                 }
             }
 
