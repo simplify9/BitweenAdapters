@@ -15,7 +15,7 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
     {
         public Handler()
         {
-            Runner.Expect(CommonProperties.Url);
+            Runner.Expect(CommonProperties.ApiKey);
             Runner.Expect(CommonProperties.Url);
             
         }
