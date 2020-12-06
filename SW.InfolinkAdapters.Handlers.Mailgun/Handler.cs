@@ -68,8 +68,9 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
             
             HttpResponseMessage message = await client.PostAsync(mailgunEndpoint, formContent);
             
-            return new XchangeFile(await message.Content.ReadAsStringAsync());
-            
+            return message.IsSuccessStatusCode ? 
+                new XchangeFile(await message.Content.ReadAsStringAsync()) 
+                : new XchangeFile(await  message.Content.ReadAsStringAsync(), null, true);
         }
     }
 }
