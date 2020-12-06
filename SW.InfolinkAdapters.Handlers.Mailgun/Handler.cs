@@ -15,8 +15,8 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
     {
         public Handler()
         {
-            Runner.Expect("ApiKey");
-            Runner.Expect("MailgunEndpoint");
+            Runner.Expect(CommonProperties.Url);
+            Runner.Expect(CommonProperties.Url);
             
         }
         
@@ -27,7 +27,7 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
             
             
             HttpClient client = new HttpClient();
-            string key = Runner.StartupValueOf<string>("ApiKey");
+            string key = Runner.StartupValueOf<string>(CommonProperties.ApiKey);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", key );
             
             MultipartFormDataContent formContent = new MultipartFormDataContent();
@@ -41,7 +41,7 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
             if (mailgunRequest.Template != null)
             {
                 formContent.Add(new StringContent(mailgunRequest.Template), "template");
-                formContent.Add(new StringContent(JsonConvert.SerializeObject(mailgunRequest.TemplateVariables)), "h:X-Mailgun-variables");
+                formContent.Add(new StringContent(JsonConvert.SerializeObject(mailgunRequest.TemplateVariables?? new {})), "h:X-Mailgun-variables");
                 
                 
             }
@@ -52,7 +52,7 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
             }
             else
             {
-                throw new Exception();
+                throw new Exception("Both Body and Template can not be null.");
             }
 
             if (mailgunRequest.AttachmentLocations != null)
@@ -64,7 +64,7 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
                 }
             }
 
-            string mailgunEndpoint = Runner.StartupValueOf<string>("MailgunEndpoint");
+            string mailgunEndpoint = Runner.StartupValueOf<string>(CommonProperties.Url);
             
             HttpResponseMessage message = await client.PostAsync(mailgunEndpoint, formContent);
             

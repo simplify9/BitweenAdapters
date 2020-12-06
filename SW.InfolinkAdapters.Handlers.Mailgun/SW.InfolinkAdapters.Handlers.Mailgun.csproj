@@ -9,4 +9,8 @@
       <PackageReference Include="Simplyworks.Serverless.Sdk" Version="2.0.16" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SW.InfolinkAdapters.Common\SW.InfolinkAdapters.Common.csproj" />
+    </ItemGroup>
+
 </Project>
