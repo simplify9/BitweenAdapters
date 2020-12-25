@@ -51,6 +51,12 @@ namespace SW.InfolinkAdapters.Handlers.Http
             {
                 client.DefaultRequestHeaders.Add("ApiKey", options.ApiKey);
             }
+            else if (options.AuthType == "Bearer")
+            {
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", options.LoginPassword);
+                
+            }
             else if (options.AuthType == "Login")
             {
                 var loginJson = JsonConvert.SerializeObject(new UserLoginModel()
