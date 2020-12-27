@@ -6,7 +6,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using DotLiquid;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
@@ -44,6 +46,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
             var options = new Options();
+            JToken urlParams = null;
 
             var client = new HttpClient();
 
@@ -95,9 +98,23 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     break;
             }
 
+            Uri uri = null;
+            if (!string.IsNullOrEmpty(xchangeFile.Data) && options.Url.Contains("{{"))
+            {
+                var templateData = Runner.StartupValueOf(CommonProperties.Url);
+                var parsedTemplate = Template.Parse(templateData);
+                var obj = JsonConvert.DeserializeObject<IDictionary<string, object>>(xchangeFile.Data, new DictionaryConverter());
+                var jsonHash = Hash.FromDictionary(obj);
+                uri = new Uri(parsedTemplate.Render(jsonHash));
+            }
+            else
+            {
+                uri = new Uri(options.Url);
+            }
+
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(options.Url),
+                RequestUri = uri,
                 Method = HttpMethodFromString(options.Verb),
                 Content = content,
             };
