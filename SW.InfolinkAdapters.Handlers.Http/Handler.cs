@@ -6,7 +6,9 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
+using DotLiquid;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
@@ -101,9 +103,21 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     break;
             }
 
+            Uri uri = null;
+            if (!string.IsNullOrEmpty(xchangeFile.Data) && options.Url.Contains("{{"))
+            {
+                string templateData = Runner.StartupValueOf(CommonProperties.Url);
+                Template parsedTemplate = Template.Parse(templateData);
+                IDictionary<string, object> obj = 
+                    JsonConvert.DeserializeObject<IDictionary<string, object>>(xchangeFile.Data, new DictionaryConverter());
+                Hash jsonHash = Hash.FromDictionary(obj);
+                uri = new Uri(parsedTemplate.Render(jsonHash));
+            }
+            else uri = new Uri(options.Url);
+
             var request = new HttpRequestMessage
             {
-                RequestUri = new Uri(options.Url),
+                RequestUri = uri,
                 Method = HttpMethodFromString(options.Verb),
                 Content = content,
             };

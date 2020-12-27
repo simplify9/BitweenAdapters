@@ -103,13 +103,30 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
             var handler = new Handler();
             Runner.MockRun(handler, new ServerlessOptions(),
                 new Dictionary<string, string>{ 
-                    {"Url", "https://postman-echo.com/get" },
+                    {"Url", "https://postman-echo.com/get?test=1" },
                     {"Verb", "get"}
                 });
             
             var rs =await handler.Handle(new XchangeFile(""));
+            var test = JToken.Parse(rs.Data)["args"]["test"].Value<string>();
+            Assert.AreEqual(test, "1");
+        }
+        [TestMethod]
+        public async Task TestGetParameterized()
+        {
+            var handler = new Handler();
+            Runner.MockRun(handler, new ServerlessOptions(),
+                new Dictionary<string, string>{ 
+                    {"Url", "https://postman-echo.com/get?test={{param1}}" },
+                    {"Verb", "get"}
+                });
             
-            
+            var rs =await handler.Handle(new XchangeFile(JsonConvert.SerializeObject(new
+            {
+                param1 = 1
+            })));
+            var test = JToken.Parse(rs.Data)["args"]["test"].Value<string>();
+            Assert.AreEqual(test, "1");
         }
     }
 }

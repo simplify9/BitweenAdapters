@@ -9,5 +9,9 @@
       <ProjectReference Include="..\SW.InfolinkAdapters.Common\SW.InfolinkAdapters.Common.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="DotLiquid" Version="2.0.366" />
+    </ItemGroup>
+
 
 </Project>

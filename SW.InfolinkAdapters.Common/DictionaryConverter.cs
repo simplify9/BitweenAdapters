@@ -4,9 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SW.InfolinkAdapters.Mappers.Liquid
+namespace SW.InfolinkAdapters
 {
-    internal class DictionaryConverter : JsonConverter
+    public class DictionaryConverter : JsonConverter
     {
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) { this.WriteValue(writer, value); }
 
