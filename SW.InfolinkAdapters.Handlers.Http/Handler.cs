@@ -46,7 +46,6 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
             var options = new Options();
-            JToken urlParams = null;
 
             var client = new HttpClient();
 
@@ -107,16 +106,14 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Uri uri = null;
             if (!string.IsNullOrEmpty(xchangeFile.Data) && options.Url.Contains("{{"))
             {
-                var templateData = Runner.StartupValueOf(CommonProperties.Url);
-                var parsedTemplate = Template.Parse(templateData);
-                var obj = JsonConvert.DeserializeObject<IDictionary<string, object>>(xchangeFile.Data, new DictionaryConverter());
-                var jsonHash = Hash.FromDictionary(obj);
+                string templateData = Runner.StartupValueOf(CommonProperties.Url);
+                Template parsedTemplate = Template.Parse(templateData);
+                IDictionary<string, object> obj = 
+                    JsonConvert.DeserializeObject<IDictionary<string, object>>(xchangeFile.Data, new DictionaryConverter());
+                Hash jsonHash = Hash.FromDictionary(obj);
                 uri = new Uri(parsedTemplate.Render(jsonHash));
             }
-            else
-            {
-                uri = new Uri(options.Url);
-            }
+            else uri = new Uri(options.Url);
 
             var request = new HttpRequestMessage
             {
