@@ -100,7 +100,7 @@ namespace SW.InfolinkAdapters.Receivers.SftpReceiver
 
             dir = Runner.StartupValueOf("TargetPath");
             batchSize = Convert.ToInt32(Runner.StartupValueOf("BatchSize"));
-            fileReturnType = Runner.StartupValueOf("SftpFileReturnType");
+            fileReturnType = Runner.StartupValueOf("DataReturnType");
             //sftp.Config("SSHAcceptAnyServerHostKey=true");
             //_container = sftp.Container.Components;
 
