@@ -87,7 +87,7 @@ namespace SW.InfolinkAdapters.Receivers.SftpReceiver
 
             sftp = new Sftp();
 
-            Rebex.Licensing.Key = Runner.StartupValueOf("SftpLicenseKey");
+            Rebex.Licensing.Key = Runner.StartupValueOf("LicenseKey");
             // connect to a server
             await sftp.ConnectAsync(Runner.StartupValueOf("Host"), Convert.ToInt32(Runner.StartupValueOf("Port")));
 
