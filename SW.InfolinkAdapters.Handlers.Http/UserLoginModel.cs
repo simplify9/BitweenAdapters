@@ -9,6 +9,6 @@ namespace SW.InfolinkAdapters.Handlers.Http
     public class LoginResponse
     {
         public string Jwt { get; set; }
-        public string RefreshToken { get; set; }
+        public string Refresh { get; set; }
     }
 }
