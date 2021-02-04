@@ -73,9 +73,10 @@ namespace SW.InfolinkAdapters.Handlers.Http
 
                 if (loginResponse.StatusCode == HttpStatusCode.OK)
                 {
-                    var jwt = await loginResponse.Content.ReadAsStringAsync();
+                    var rs = await loginResponse.Content.ReadAsStringAsync();
+                    LoginResponse rsDeserialized = JsonConvert.DeserializeObject<LoginResponse>(rs);
                     client.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("Bearer", jwt);
+                        new AuthenticationHeaderValue("Bearer", rsDeserialized.Jwt);
                 }
                 else
                 {
