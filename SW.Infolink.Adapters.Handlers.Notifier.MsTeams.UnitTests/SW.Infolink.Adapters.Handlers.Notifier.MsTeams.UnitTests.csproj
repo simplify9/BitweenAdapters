@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\SW.Infolink.Adapters.Handlers.Notifier.MsTeams\SW.Infolink.Adapters.Handlers.Notifier.MsTeams.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+      <PackageReference Include="MSTest.TestAdapter" Version="2.2.4" />
+      <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+    </ItemGroup>
+
+</Project>
