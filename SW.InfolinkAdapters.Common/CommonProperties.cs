@@ -31,6 +31,9 @@ namespace SW.InfolinkAdapters
         public const string FileNameTemplate = "FileNameTemplate";
         public const string Protocol = "Protocol";
         public const string RedirectionUrl = "RedirectionUrl";
+        public const string From = "From";
+        public const string To = "To";
+        public const string Subject = "Subject";
         //public const string FileNamePrefix = "FileNamePrefix";
 
 

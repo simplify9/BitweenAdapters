@@ -1,6 +1,6 @@
 using System;
 
-namespace SW.Infolink.Adapters.Handlers.Notifier.MsTeams
+namespace SW.InfolinkAdapters
 {
     public class NotificationModel
     {

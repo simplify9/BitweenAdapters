@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using SW.InfolinkAdapters;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
