@@ -15,64 +15,97 @@ namespace SW.InfolinkAdapters.Handlers.Sendgrid
     {
         public Handler()
         {
-            Runner.Expect(CommonProperties.ApiKey); ;
+            Runner.Expect(CommonProperties.ApiKey);
+            Runner.Expect(CommonProperties.InputModel,"EmailRequest");
+            Runner.Expect(CommonProperties.From,null);
+            Runner.Expect(CommonProperties.To,null);
+            Runner.Expect(CommonProperties.Subject,null);
+            Runner.Expect(CommonProperties.DataTemplate,null);
         }
         
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
-            var request = JsonConvert.DeserializeObject<EmailRequest>(xchangeFile.Data);
-            
             var client = new SendGridClient( Runner.StartupValueOf<string>(CommonProperties.ApiKey));
             
+            var inputModel = Runner.StartupValueOf<string>(CommonProperties.InputModel);
+
             var msg = new SendGridMessage()
             {
-                From = new EmailAddress(request.From),
-                Subject = request.Subject,
                 TrackingSettings = new TrackingSettings
                 {
-                    ClickTracking = new ClickTracking { Enable = false }
-                },
+                    ClickTracking = new ClickTracking {Enable = false}
+                }
             };
-            msg.AddTo(new EmailAddress(request.To));
-            
-            if (request.Template != null)
+
+            if (inputModel == "EmailRequest")
             {
-                msg.SetTemplateId(request.Template);
-                msg.SetTemplateData(request.TemplateVariables);
-            }
-            else if (request.Body != null)
-            {
-                msg.HtmlContent = request.Body;
-                msg.PlainTextContent = request.Body;
+                var request = JsonConvert.DeserializeObject<EmailRequest>(xchangeFile.Data);
+
+                msg.From = new EmailAddress(request.From);
+                msg.Subject = request.Subject;
+                msg.AddTo(new EmailAddress(request.To));
+                
+                if (request.Template != null)
+                {
+                    msg.SetTemplateId(request.Template);
+                    msg.SetTemplateData(request.TemplateVariables);
+                }
+                else if (request.Body != null)
+                {
+                    msg.HtmlContent = request.Body;
+                    msg.PlainTextContent = request.Body;
+                }
+                else
+                {
+                    throw new Exception("Both Body and Template can not be null.");
+                }
+                
+                if (request.AttachmentLocations != null)
+                {
+                    var attachments = new List<Attachment>();
+                    foreach (var (key, value) in request.AttachmentLocations)
+                    {
+                        var fileBytes = await GetFileBytes(value);
+                        attachments.Add(new Attachment
+                        {
+                            Content = Convert.ToBase64String(fileBytes,0,fileBytes.Length), 
+                            Filename = key,
+                        });
+                    }
+
+                    msg.Attachments = attachments;
+                }
+                
             }
             else
             {
-                throw new Exception("Both Body and Template can not be null.");
-            }
-            
-            
-            if (request.AttachmentLocations != null)
-            {
-                var attachments = new List<Attachment>();
-                foreach (var (key, value) in request.AttachmentLocations)
+                msg.From = new EmailAddress(Runner.StartupValueOf<string>(CommonProperties.From));
+                msg.Subject = Runner.StartupValueOf<string>(CommonProperties.Subject);
+                msg.AddTo(new EmailAddress(Runner.StartupValueOf<string>(CommonProperties.To)));
+
+                var template = Runner.StartupValueOf<string>(CommonProperties.DataTemplate);
+                
+                if (template != null)
                 {
-                    var fileBytes = await GetFileBytes(value);
-                    attachments.Add(new Attachment
-                    {
-                        Content = Convert.ToBase64String(fileBytes,0,fileBytes.Length), 
-                        Filename = key,
-                    });
+                    msg.SetTemplateId(template);
+                    msg.SetTemplateData(xchangeFile.Data);
                 }
-
-                msg.Attachments = attachments;
+                else
+                {
+                    msg.HtmlContent = xchangeFile.Data;
+                    msg.PlainTextContent = xchangeFile.Data;
+                }
+                
             }
-
+            
             var response = await client.SendEmailAsync(msg);
 
             if (response.StatusCode < HttpStatusCode.BadRequest) return new XchangeFile(response.StatusCode.ToString());
 
             throw new Exception(response.StatusCode.ToString());
+            
         }
+        
         
         public async Task<byte[]> GetFileBytes(string url)
         {
