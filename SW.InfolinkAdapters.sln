@@ -41,21 +41,23 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Receive
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Handlers.Ftp", "SW.InfolinkAdapters.Handlers.Ftp\SW.InfolinkAdapters.Handlers.Ftp.csproj", "{FB179363-4CEF-4E0F-9100-1E0FAB036A23}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Receivers.Pop3", "SW.InfolinkAdapters.Receivers.Pop3\SW.InfolinkAdapters.Receivers.Pop3.csproj", "{0951A08E-F2A7-49F8-84BE-DDF9A81099DC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Receivers.Pop3", "SW.InfolinkAdapters.Receivers.Pop3\SW.InfolinkAdapters.Receivers.Pop3.csproj", "{0951A08E-F2A7-49F8-84BE-DDF9A81099DC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Receivers.Pop3.UnitTests", "SW.InfolinkAdapters.Receivers.Pop3.UnitTests\SW.InfolinkAdapters.Receivers.Pop3.UnitTests.csproj", "{29BC4A0F-221C-47D6-B90D-64262369F9BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Receivers.Pop3.UnitTests", "SW.InfolinkAdapters.Receivers.Pop3.UnitTests\SW.InfolinkAdapters.Receivers.Pop3.UnitTests.csproj", "{29BC4A0F-221C-47D6-B90D-64262369F9BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Handlers.Mailgun", "SW.InfolinkAdapters.Handlers.Mailgun\SW.InfolinkAdapters.Handlers.Mailgun.csproj", "{EEF15107-8EE0-4161-963C-D51DA6B6D2DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Handlers.Mailgun", "SW.InfolinkAdapters.Handlers.Mailgun\SW.InfolinkAdapters.Handlers.Mailgun.csproj", "{EEF15107-8EE0-4161-963C-D51DA6B6D2DB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Handlers.Sendgrid", "SW.InfolinkAdapters.Handlers.Sendgrid\SW.InfolinkAdapters.Handlers.Sendgrid.csproj", "{309974F6-E941-4F00-A46A-0D1808D7103E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Handlers.Sendgrid", "SW.InfolinkAdapters.Handlers.Sendgrid\SW.InfolinkAdapters.Handlers.Sendgrid.csproj", "{309974F6-E941-4F00-A46A-0D1808D7103E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.Infolink.Adapters.Handlers.Notifier.MsTeams", "SW.Infolink.Adapters.Handlers.Notifier.MsTeams\SW.Infolink.Adapters.Handlers.Notifier.MsTeams.csproj", "{1BB740DA-C873-4D60-82C3-D62BA580339F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.Infolink.Adapters.Handlers.Notifier.MsTeams", "SW.Infolink.Adapters.Handlers.Notifier.MsTeams\SW.Infolink.Adapters.Handlers.Notifier.MsTeams.csproj", "{1BB740DA-C873-4D60-82C3-D62BA580339F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.Infolink.Adapters.Handlers.Notifier.MsTeams.UnitTests", "SW.Infolink.Adapters.Handlers.Notifier.MsTeams.UnitTests\SW.Infolink.Adapters.Handlers.Notifier.MsTeams.UnitTests.csproj", "{DDA0E10B-99A9-444C-875D-E7F55F5BF3B7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.Infolink.Adapters.Handlers.Notifier.MsTeams.UnitTests", "SW.Infolink.Adapters.Handlers.Notifier.MsTeams.UnitTests\SW.Infolink.Adapters.Handlers.Notifier.MsTeams.UnitTests.csproj", "{DDA0E10B-99A9-444C-875D-E7F55F5BF3B7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.Infolink.Adapters.Handlers.Notifier.Sendgrid", "SW.Infolink.Adapters.Handlers.Notifier.Sendgrid\SW.Infolink.Adapters.Handlers.Notifier.Sendgrid.csproj", "{645C9AF2-728C-43A8-97AD-1C074AB582C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.Infolink.Adapters.Handlers.Notifier.Sendgrid", "SW.Infolink.Adapters.Handlers.Notifier.Sendgrid\SW.Infolink.Adapters.Handlers.Notifier.Sendgrid.csproj", "{645C9AF2-728C-43A8-97AD-1C074AB582C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Receivers.Http", "SW.InfolinkAdapters.Receivers.Http\SW.InfolinkAdapters.Receivers.Http.csproj", "{AA49FD5C-B877-4BEC-8044-7D6DFBF58D6C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Receivers.Http", "SW.InfolinkAdapters.Receivers.Http\SW.InfolinkAdapters.Receivers.Http.csproj", "{AA49FD5C-B877-4BEC-8044-7D6DFBF58D6C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Receivers.S3", "SW.InfolinkAdapters.Receivers.S3\SW.InfolinkAdapters.Receivers.S3.csproj", "{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -155,6 +157,10 @@ Global
 		{AA49FD5C-B877-4BEC-8044-7D6DFBF58D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AA49FD5C-B877-4BEC-8044-7D6DFBF58D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AA49FD5C-B877-4BEC-8044-7D6DFBF58D6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -183,6 +189,7 @@ Global
 		{DDA0E10B-99A9-444C-875D-E7F55F5BF3B7} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
 		{645C9AF2-728C-43A8-97AD-1C074AB582C7} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
 		{AA49FD5C-B877-4BEC-8044-7D6DFBF58D6C} = {6578BC40-6098-449D-B40F-83F4B7522D32}
+		{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4} = {6578BC40-6098-449D-B40F-83F4B7522D32}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0190D17A-18D8-4A36-AA09-B479F944496E}
