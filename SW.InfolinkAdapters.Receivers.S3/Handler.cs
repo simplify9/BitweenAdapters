@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using SW.CloudFiles;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
@@ -28,19 +29,16 @@ namespace SW.InfolinkAdapters.Receivers.S3
         {
             cloudFiles = new CloudFilesService(new CloudFilesOptions
             {
-
                 AccessKeyId = Runner.StartupValueOf(CommonProperties.AccessKeyId),
                 SecretAccessKey = Runner.StartupValueOf(CommonProperties.SecretAccessKey),
                 ServiceUrl = Runner.StartupValueOf(CommonProperties.Url),
                 BucketName = Runner.StartupValueOf(CommonProperties.TargetPath),
-
             });
         }
 
         public async Task Finalize()
         {
-            //await _pop3.DisconnectAsync(false);
-            //_pop3.Dispose();
+            
         }
 
         public async Task<IEnumerable<string>> ListFiles()
@@ -54,14 +52,16 @@ namespace SW.InfolinkAdapters.Receivers.S3
 
         public async Task<XchangeFile> GetFile(string fileId)
         {
-
-
-            return new XchangeFile("", fileId);
+            var files = await cloudFiles.ListAsync("");
+            var selectedFile = files.FirstOrDefault(f => f.Key == fileId);
+            var res = JsonConvert.SerializeObject(selectedFile);
+            
+            return new XchangeFile(res, fileId);
         }
 
-        public Task DeleteFile(string fileId)
+        public async Task DeleteFile(string fileId)
         {
-            throw new NotImplementedException();
+            await cloudFiles.DeleteAsync(fileId);
         }
     }
 }

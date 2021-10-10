@@ -59,6 +59,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SW.InfolinkAdapters.Receive
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Receivers.S3", "SW.InfolinkAdapters.Receivers.S3\SW.InfolinkAdapters.Receivers.S3.csproj", "{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Receivers.S3.UnitTest", "SW.InfolinkAdapters.Receivers.S3.UnitTest\SW.InfolinkAdapters.Receivers.S3.UnitTest.csproj", "{F17B3E01-889B-420B-A39F-61FE5EE27E00}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -161,6 +163,10 @@ Global
 		{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F17B3E01-889B-420B-A39F-61FE5EE27E00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F17B3E01-889B-420B-A39F-61FE5EE27E00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F17B3E01-889B-420B-A39F-61FE5EE27E00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F17B3E01-889B-420B-A39F-61FE5EE27E00}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -190,6 +196,7 @@ Global
 		{645C9AF2-728C-43A8-97AD-1C074AB582C7} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
 		{AA49FD5C-B877-4BEC-8044-7D6DFBF58D6C} = {6578BC40-6098-449D-B40F-83F4B7522D32}
 		{6FBD3954-27E6-4859-AD1A-D0DEAE8ABDF4} = {6578BC40-6098-449D-B40F-83F4B7522D32}
+		{F17B3E01-889B-420B-A39F-61FE5EE27E00} = {6578BC40-6098-449D-B40F-83F4B7522D32}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0190D17A-18D8-4A36-AA09-B479F944496E}
