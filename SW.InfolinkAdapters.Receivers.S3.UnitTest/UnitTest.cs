@@ -19,10 +19,11 @@ namespace SW.InfolinkAdapters.Receivers.S3.UnitTest
                 Runner.MockRun(handler, new ServerlessOptions(), 
                     new Dictionary<string, string>
                     {
-                        {CommonProperties.SecretAccessKey, ""},
                         {CommonProperties.AccessKeyId, ""},
+                        {CommonProperties.SecretAccessKey, ""},
+                        {CommonProperties.FolderName, "s3receivertest"},
                         {CommonProperties.TargetPath, ""},
-                        {CommonProperties.Url, "https://fra1.digitaloceanspaces.com"},
+                        {CommonProperties.Url, ""},
                     });
                 await handler.Initialize();
                 var names = await handler.ListFiles();
