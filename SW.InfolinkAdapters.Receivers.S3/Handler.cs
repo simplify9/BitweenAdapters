@@ -21,7 +21,7 @@ namespace SW.InfolinkAdapters.Receivers.S3
             Runner.Expect(CommonProperties.SecretAccessKey);
             Runner.Expect(CommonProperties.Url);
             Runner.Expect(CommonProperties.TargetPath);
-            Runner.Expect(CommonProperties.FolderName);
+            //Runner.Expect(CommonProperties.FolderName);
             Runner.Expect(CommonProperties.BatchSize, "50");
             Runner.Expect(CommonProperties.ContentType, "text/plain");
         }
@@ -43,7 +43,7 @@ namespace SW.InfolinkAdapters.Receivers.S3
 
         public async Task<IEnumerable<string>> ListFiles()
         {
-            var files = await cloudFiles.ListAsync("");
+            var files = await cloudFiles.ListAsync(null);
             var batchSize = Convert.ToInt32(Runner.StartupValueOf(CommonProperties.BatchSize));
             var filesList = files.Select(f => f.Key).Take(batchSize).ToArray();
 
@@ -52,7 +52,7 @@ namespace SW.InfolinkAdapters.Receivers.S3
 
         public async Task<XchangeFile> GetFile(string fileId)
         {
-            var files = await cloudFiles.ListAsync("");
+            var files = await cloudFiles.ListAsync(null);
             var selectedFile = files.FirstOrDefault(f => f.Key == fileId);
             var res = JsonConvert.SerializeObject(selectedFile);
             
