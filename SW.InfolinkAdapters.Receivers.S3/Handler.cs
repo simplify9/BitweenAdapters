@@ -55,8 +55,7 @@ namespace SW.InfolinkAdapters.Receivers.S3
         {
             var file = await cloudFiles.OpenReadAsync(fileId);
             var data = await new StreamReader(file).ReadToEndAsync();
-            var res = JsonConvert.SerializeObject(data);
-            return new XchangeFile(res, fileId);
+            return new XchangeFile(data, fileId);
         }
 
         public async Task DeleteFile(string fileId)
