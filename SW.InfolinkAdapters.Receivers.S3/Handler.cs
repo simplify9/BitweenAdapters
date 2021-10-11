@@ -23,7 +23,7 @@ namespace SW.InfolinkAdapters.Receivers.S3
             Runner.Expect(CommonProperties.TargetPath);
             Runner.Expect(CommonProperties.FolderName);
             Runner.Expect(CommonProperties.BatchSize, "50");
-            Runner.Expect(CommonProperties.ContentType, "text/plain");
+            Runner.Expect(CommonProperties.ContentType, "base64");
         }
         public async Task Initialize()
         {
@@ -38,7 +38,6 @@ namespace SW.InfolinkAdapters.Receivers.S3
 
         public async Task Finalize()
         {
-            
         }
 
         public async Task<IEnumerable<string>> ListFiles()
@@ -54,8 +53,21 @@ namespace SW.InfolinkAdapters.Receivers.S3
         public async Task<XchangeFile> GetFile(string fileId)
         {
             var file = await cloudFiles.OpenReadAsync(fileId);
-            var data = await new StreamReader(file).ReadToEndAsync();
-            return new XchangeFile(data, fileId);
+            byte[] bytes;
+            await using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                bytes = memoryStream.ToArray();
+            }
+            string base64 = Convert.ToBase64String(bytes);
+            XchangeFile xchangeFile;
+            xchangeFile = Runner.StartupValueOf(CommonProperties.ContentType) switch
+            {
+                "text/plain" => new XchangeFile(await new StreamReader(file).ReadToEndAsync(), fileId),
+                _ => new XchangeFile(base64, fileId)
+            };
+
+            return xchangeFile;
         }
 
         public async Task DeleteFile(string fileId)

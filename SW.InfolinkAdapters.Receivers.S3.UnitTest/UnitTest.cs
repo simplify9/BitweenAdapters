@@ -23,7 +23,8 @@ namespace SW.InfolinkAdapters.Receivers.S3.UnitTest
                         {CommonProperties.SecretAccessKey, ""},
                         {CommonProperties.FolderName, "s3receivertest"},
                         {CommonProperties.TargetPath, ""},
-                        {CommonProperties.Url, ""},
+                        {CommonProperties.Url,  "https://fra1.digitaloceanspaces.com"},
+                        {CommonProperties.ContentType, "text/plain"}
                     });
                 await handler.Initialize();
                 var names = await handler.ListFiles();
