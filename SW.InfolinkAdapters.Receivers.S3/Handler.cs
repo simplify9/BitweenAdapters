@@ -21,7 +21,7 @@ namespace SW.InfolinkAdapters.Receivers.S3
             Runner.Expect(CommonProperties.SecretAccessKey);
             Runner.Expect(CommonProperties.Url);
             Runner.Expect(CommonProperties.TargetPath);
-            Runner.Expect(CommonProperties.FolderName);
+            Runner.Expect(CommonProperties.FolderName, "");
             Runner.Expect(CommonProperties.BatchSize, "50");
             Runner.Expect(CommonProperties.ContentType, "base64");
         }
@@ -42,7 +42,7 @@ namespace SW.InfolinkAdapters.Receivers.S3
 
         public async Task<IEnumerable<string>> ListFiles()
         {
-            var key = string.Concat(Runner.StartupValueOf(CommonProperties.FolderName));
+            var key = Runner.StartupValueOf(CommonProperties.FolderName);
             var files = await cloudFiles.ListAsync(key);
             var batchSize = Convert.ToInt32(Runner.StartupValueOf(CommonProperties.BatchSize));
             var filesList = files.Where(f => !f.Key.EndsWith("/")).Select(f => f.Key).Take(batchSize).ToArray();
