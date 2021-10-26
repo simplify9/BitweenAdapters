@@ -24,7 +24,7 @@ namespace SW.InfolinkAdapters.Receivers.S3
             Runner.Expect(CommonProperties.FolderName, "");
             Runner.Expect(CommonProperties.BatchSize, "50");
             Runner.Expect(CommonProperties.ContentType, "base64");
-            Runner.Expect("deleteFiles", "no");
+            Runner.Expect(CommonProperties.DeleteMovesFileTo, null);
         }
         public async Task Initialize()
         {
@@ -73,8 +73,13 @@ namespace SW.InfolinkAdapters.Receivers.S3
 
         public async Task DeleteFile(string fileId)
         {
-            if (Runner.StartupValueOf("deleteFiles").ToLower() == "yes")
+            if (Runner.StartupValueOf(CommonProperties.DeleteMovesFileTo) != null)
+            {
+                var file = await cloudFiles.OpenReadAsync(fileId);
+                await using var newFile = File.Create(Runner.StartupValueOf(CommonProperties.DeleteMovesFileTo));
+                await file.CopyToAsync(newFile);
                 await cloudFiles.DeleteAsync(fileId);
+            }
         }
     }
 }
