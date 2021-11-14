@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DotLiquid;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
@@ -42,6 +41,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Runner.Expect(CommonProperties.Headers, null);
             Runner.Expect(CommonProperties.ContentType, "application/json");
             Runner.Expect(CommonProperties.Verb, "post");
+            Runner.Expect(CommonProperties.CorrelationId);
+            Runner.Expect("CorrelationIdHeaderName", "correlation-id");
         }
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
@@ -123,6 +124,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 Content = content,
             };
 
+            var correlationId = new KeyValuePair<string, string>(Runner.StartupValueOf("CorrelationIdHeaderName"), options.CorrelationId);
+            request.Headers.Add(correlationId.Key, correlationId.Value);
             var headers = options.Headers?.Split(',').Select(h =>
             {
                 var split = h.Split(':');
