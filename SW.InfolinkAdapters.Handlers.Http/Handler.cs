@@ -41,7 +41,6 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Runner.Expect(CommonProperties.Headers, null);
             Runner.Expect(CommonProperties.ContentType, "application/json");
             Runner.Expect(CommonProperties.Verb, "post");
-            Runner.Expect(CommonProperties.CorrelationId);
             Runner.Expect("CorrelationIdHeaderName", "correlation-id");
         }
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
