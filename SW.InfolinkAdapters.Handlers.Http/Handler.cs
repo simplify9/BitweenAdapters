@@ -41,7 +41,6 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Runner.Expect(CommonProperties.Headers, null);
             Runner.Expect(CommonProperties.ContentType, "application/json");
             Runner.Expect(CommonProperties.Verb, "post");
-            Runner.Expect("CorrelationIdHeaderName", "correlation-id");
         }
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
@@ -122,19 +121,21 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 Method = HttpMethodFromString(options.Verb),
                 Content = content,
             };
-
-            var correlationId = new KeyValuePair<string, string>(Runner.StartupValueOf("CorrelationIdHeaderName"), options.CorrelationId);
-            request.Headers.Add(correlationId.Key, correlationId.Value);
+            
             var headers = options.Headers?.Split(',').Select(h =>
             {
                 var split = h.Split(':');
                 return new KeyValuePair<string, string>(split[0], split[1]);
             });
 
+            if (string.IsNullOrEmpty(options.CorrelationId))
+                throw new Exception("CorrelationId not found");
+
             if (headers != null)
                 foreach (var keyValuePair in headers)
                     request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
-
+            
+            request.Headers.Add(RequestContext.CorrelationIdHeaderName, options.CorrelationId);
             var response = await client.SendAsync(request);
 
             if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 500)
