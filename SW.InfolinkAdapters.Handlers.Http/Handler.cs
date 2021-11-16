@@ -128,9 +128,6 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 return new KeyValuePair<string, string>(split[0], split[1]);
             });
 
-            if (string.IsNullOrEmpty(options.CorrelationId))
-                throw new Exception("CorrelationId not found");
-
             if (headers != null)
                 foreach (var keyValuePair in headers)
                     request.Headers.Add(keyValuePair.Key, keyValuePair.Value);

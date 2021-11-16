@@ -37,7 +37,7 @@ namespace SW.InfolinkAdapters
         public const string InputModel = "InputModel";
         //public const string FileNamePrefix = "FileNamePrefix";
         public const string FileNamePrefix = "FileNamePrefix";
-        public const string CorrelationId = "CorrelationId";
+        public const string CorrelationId = Serverless.Sdk.Constants.CorrelationIdName;
 
 
 
