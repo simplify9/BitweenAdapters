@@ -15,6 +15,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             ContentType = Runner.StartupValueOf(CommonProperties.ContentType);
             Headers = Runner.StartupValueOf(CommonProperties.Headers);
             Verb = Runner.StartupValueOf(CommonProperties.Verb);
+            CorrelationId = Runner.StartupValueOf(CommonProperties.CorrelationId);
         }
         
         
@@ -32,6 +33,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public string Url { get; set; }
         public string ContentType { get; set; }
         public string Headers { get; set; }
+        public string CorrelationId { get; set; }
     }
     
 }

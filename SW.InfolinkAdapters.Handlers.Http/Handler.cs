@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using DotLiquid;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
@@ -122,7 +121,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 Method = HttpMethodFromString(options.Verb),
                 Content = content,
             };
-
+            
             var headers = options.Headers?.Split(',').Select(h =>
             {
                 var split = h.Split(':');
@@ -132,7 +131,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
             if (headers != null)
                 foreach (var keyValuePair in headers)
                     request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
-
+            
+            request.Headers.Add(RequestContext.CorrelationIdHeaderName, options.CorrelationId);
             var response = await client.SendAsync(request);
 
             if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 500)
