@@ -9,7 +9,7 @@ using SW.PrimitiveTypes;
 
 namespace SW.InfolinkAdapters.Handlers.Ftp
 {
-    class Handler : IInfolinkHandler
+    public class Handler : IInfolinkHandler
     {
         public Handler()
         {
@@ -71,7 +71,8 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
             //    filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_";
             //filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_" + DateTime.UtcNow.Day + DateTime.UtcNow.Month + DateTime.UtcNow.Year + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second + DateTime.UtcNow.Millisecond;
 
-            await ftpOrSftp.PutFileAsync(stream, Runner.StartupValueOf($"{CommonProperties.TargetPath}/{filename}"));
+            var targetPath = Runner.StartupValueOf(CommonProperties.TargetPath);
+            await ftpOrSftp.PutFileAsync(stream, $"{targetPath}/{filename}");
 
             await ftpOrSftp.DisconnectAsync();
             return new XchangeFile(string.Empty);
