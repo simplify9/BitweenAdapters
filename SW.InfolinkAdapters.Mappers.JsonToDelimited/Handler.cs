@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using CsvHelper.Configuration;
 
 namespace SW.InfolinkAdapters.Mappers.JsonToDelimited
 {
@@ -22,10 +23,13 @@ namespace SW.InfolinkAdapters.Mappers.JsonToDelimited
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
             StringWriter csvString = new StringWriter();
-            using (var csv = new CsvWriter(csvString, CultureInfo.InvariantCulture))
-            {
 
-                csv.Configuration.Delimiter = Runner.StartupValueOf(CommonProperties.FieldsDelimiter);
+            var config = new CsvConfiguration(CultureInfo.InvariantCulture)
+            {
+                Delimiter = Runner.StartupValueOf(CommonProperties.FieldsDelimiter)
+            };
+            using (var csv = new CsvWriter(csvString,  config))
+            {
 
                 JToken jToken = JObject.Parse(xchangeFile.Data);
                 var doc = jToken.SelectToken(Runner.StartupValueOf(CommonProperties.TargetPath)).ToString();
