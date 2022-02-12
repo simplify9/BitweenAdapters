@@ -4,6 +4,8 @@ namespace SW.InfolinkAdapters
 {
     public static class CommonProperties
     {
+        public const string Timeout = "Timeout";
+
         public const string AuthType = "AuthType";
         public const string ApiKey = "ApiKey";
         public const string LoginUrl = "LoginUrl";
