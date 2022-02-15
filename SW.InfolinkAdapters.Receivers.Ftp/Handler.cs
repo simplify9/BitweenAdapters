@@ -3,9 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Rebex.Net;
+using Rebex.Security.Certificates;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
@@ -28,6 +30,7 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
             Runner.Expect(CommonProperties.ResponseEncoding, "utf8");
             Runner.Expect(CommonProperties.DeleteMovesFileTo, null);
             Runner.Expect(CommonProperties.Protocol, "sftp");
+            Runner.Expect(CommonProperties.Certificate,null);
         }
 
         public async Task DeleteFile(string fileId)
@@ -73,35 +76,51 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
         {
 
             Rebex.Licensing.Key = Runner.StartupValueOf(CommonProperties.LicenseKey);
+            var username = Runner.StartupValueOf(CommonProperties.Username);
+            var password = Runner.StartupValueOf(CommonProperties.Password);
+            var port = Runner.StartupValueOf(CommonProperties.Port);
+            var host = Runner.StartupValueOf(CommonProperties.Host);
 
             switch (Runner.StartupValueOf(CommonProperties.Protocol).ToLower())
             {
+                case "sftpssh":
+                    var sftpssh = new Sftp();
+                    var sftpsshPort = string.IsNullOrWhiteSpace(port) ? 22 : Convert.ToInt32(port);
+                    await sftpssh.ConnectAsync(host, sftpsshPort);
+                    
+                    var certBytes =  Encoding.UTF8.GetBytes(Runner.StartupValueOf(CommonProperties.Certificate));
+                    var signingCert = new X509Certificate2(certBytes,  password, X509KeyStorageFlags.Exportable);
+                    var privateKey = new SshPrivateKey(signingCert);
+                    await sftpssh.LoginAsync(username, privateKey);
+                    
+                    _ftpOrSftp = sftpssh;
+                    break;
+                
                 case "sftp":
-
                     var sftp = new Sftp();
-
-                    int sftpPort = string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.Port)) ? 22 : Convert.ToInt32(Runner.StartupValueOf(CommonProperties.Port));
-                    await sftp.ConnectAsync(Runner.StartupValueOf(CommonProperties.Host), sftpPort);
+                    var sftpPort = string.IsNullOrWhiteSpace(port) ? 22 : Convert.ToInt32(port);
+                    await sftp.ConnectAsync(host, sftpPort);
                     _ftpOrSftp = sftp;
+                    
+                    await _ftpOrSftp.LoginAsync(username, password);
                     break;
 
                 case "ftp":
 
                     var ftp = new Rebex.Net.Ftp();
-                    int ftpPort = string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.Port)) ? 21 : Convert.ToInt32(Runner.StartupValueOf(CommonProperties.Port));
-                    await ftp.ConnectAsync(Runner.StartupValueOf(CommonProperties.Host), ftpPort);
+                    var ftpPort = string.IsNullOrWhiteSpace(port) ? 21 : Convert.ToInt32(port);
+                    await ftp.ConnectAsync(host, ftpPort);
                     _ftpOrSftp = ftp;
+                    
+                    await _ftpOrSftp.LoginAsync(username, password);
                     break;
 
                 default:
                     throw new ArgumentException($"Unknown protocol '{Runner.StartupValueOf(CommonProperties.Protocol)}'");
 
             }
-
-            // authenticate
-            await _ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
-
-            //_targetPath = Runner.StartupValueOf(CommonProperties.TargetPath);
+            
+            
             if (!string.IsNullOrEmpty(Runner.StartupValueOf(CommonProperties.TargetPath)))
                 await _ftpOrSftp.ChangeDirectoryAsync(Runner.StartupValueOf(CommonProperties.TargetPath));
         }
