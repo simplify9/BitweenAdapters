@@ -30,7 +30,7 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
             Runner.Expect(CommonProperties.ResponseEncoding, "utf8");
             Runner.Expect(CommonProperties.DeleteMovesFileTo, null);
             Runner.Expect(CommonProperties.Protocol, "sftp");
-            Runner.Expect(CommonProperties.Certificate,null);
+            Runner.Expect(CommonProperties.PrivateKey,null);
         }
 
         public async Task DeleteFile(string fileId)
@@ -88,9 +88,8 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
                     var sftpsshPort = string.IsNullOrWhiteSpace(port) ? 22 : Convert.ToInt32(port);
                     await sftpssh.ConnectAsync(host, sftpsshPort);
                     
-                    var certBytes =  Encoding.UTF8.GetBytes(Runner.StartupValueOf(CommonProperties.Certificate));
-                    var signingCert = new X509Certificate2(certBytes,  password, X509KeyStorageFlags.Exportable);
-                    var privateKey = new SshPrivateKey(signingCert);
+                    var keyBytes =  Encoding.UTF8.GetBytes(Runner.StartupValueOf(CommonProperties.PrivateKey));
+                    var privateKey = new SshPrivateKey(keyBytes,password);
                     await sftpssh.LoginAsync(username, privateKey);
                     
                     _ftpOrSftp = sftpssh;

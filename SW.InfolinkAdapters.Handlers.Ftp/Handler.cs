@@ -22,6 +22,7 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
             Runner.Expect(CommonProperties.TargetPath, null);
             //Runner.Expect(CommonProperties.FileNamePrefix, null);
             Runner.Expect(CommonProperties.Protocol, "sftp");
+            Runner.Expect(CommonProperties.PrivateKey,null);
         }
 
 
@@ -44,9 +45,8 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
                     var sftpsshPort = string.IsNullOrWhiteSpace(port) ? 22 : Convert.ToInt32(port);
                     await sftpssh.ConnectAsync(host, sftpsshPort);
                     
-                    var certBytes =  Encoding.UTF8.GetBytes(Runner.StartupValueOf(CommonProperties.Certificate));
-                    var signingCert = new X509Certificate2(certBytes,  password, X509KeyStorageFlags.Exportable);
-                    var privateKey = new SshPrivateKey(signingCert);
+                    var keyBytes =  Encoding.UTF8.GetBytes(Runner.StartupValueOf(CommonProperties.PrivateKey));
+                    var privateKey = new SshPrivateKey(keyBytes,password);
                     await sftpssh.LoginAsync(username, privateKey);
                     
                     ftpOrSftp = sftpssh;
