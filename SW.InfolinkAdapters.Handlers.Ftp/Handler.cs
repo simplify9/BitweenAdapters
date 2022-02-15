@@ -2,6 +2,7 @@
 using SW.Serverless.Sdk;
 using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Rebex.Net;
@@ -25,28 +26,48 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
 
 
         private IFtp ftpOrSftp;
+        
 
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
 
             Rebex.Licensing.Key = Runner.StartupValueOf(CommonProperties.LicenseKey);
+            var username = Runner.StartupValueOf(CommonProperties.Username);
+            var password = Runner.StartupValueOf(CommonProperties.Password);
+            var port = Runner.StartupValueOf(CommonProperties.Port);
+            var host = Runner.StartupValueOf(CommonProperties.Host);
 
             switch (Runner.StartupValueOf(CommonProperties.Protocol).ToLower())
             {
+                case "sftpssh":
+                    var sftpssh = new Sftp();
+                    var sftpsshPort = string.IsNullOrWhiteSpace(port) ? 22 : Convert.ToInt32(port);
+                    await sftpssh.ConnectAsync(host, sftpsshPort);
+                    
+                    var certBytes =  Encoding.UTF8.GetBytes(Runner.StartupValueOf(CommonProperties.Certificate));
+                    var signingCert = new X509Certificate2(certBytes,  password, X509KeyStorageFlags.Exportable);
+                    var privateKey = new SshPrivateKey(signingCert);
+                    await sftpssh.LoginAsync(username, privateKey);
+                    
+                    ftpOrSftp = sftpssh;
+                    break;
+                
                 case "sftp":
 
                     var sftp = new Sftp();
-                    int sftpPort = string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.Port)) ? 22 : Convert.ToInt32(Runner.StartupValueOf(CommonProperties.Port));
-                    await sftp.ConnectAsync(Runner.StartupValueOf(CommonProperties.Host), sftpPort);
+                    var sftpPort = string.IsNullOrWhiteSpace(port) ? 22 : Convert.ToInt32(port);
+                    await sftp.ConnectAsync(host, sftpPort);
                     ftpOrSftp = sftp;
+                    await ftpOrSftp.LoginAsync(username, password);
                     break;
 
                 case "ftp":
 
                     var ftp = new Rebex.Net.Ftp();
-                    int ftpPort = string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.Port)) ? 21 : Convert.ToInt32(Runner.StartupValueOf(CommonProperties.Port));
-                    await ftp.ConnectAsync(Runner.StartupValueOf(CommonProperties.Host), ftpPort);
+                    var ftpPort = string.IsNullOrWhiteSpace(port) ? 21 : Convert.ToInt32(port);
+                    await ftp.ConnectAsync(host, ftpPort);
                     ftpOrSftp = ftp;
+                    await ftpOrSftp.LoginAsync(username, password);
                     break;
 
                 default:
@@ -54,9 +75,8 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
 
             }
 
-            await ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
 
-            using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xchangeFile.Data));
+            await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xchangeFile.Data));
             //Stream str = stream;
 
             var filename = xchangeFile.Filename;
