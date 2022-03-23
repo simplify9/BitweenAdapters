@@ -2,12 +2,12 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Rebex.Mail" Version="5.0.7999" />
-      <PackageReference Include="Rebex.Pop3" Version="5.0.7999" />
+      <PackageReference Include="Rebex.Mail" Version="6.0.8060" />
+      <PackageReference Include="Rebex.Pop3" Version="6.0.8060" />
       <PackageReference Include="SimplyWorks.Serverless.Sdk" Version="5.0.5" />
     </ItemGroup>
 

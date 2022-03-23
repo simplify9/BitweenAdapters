@@ -2,13 +2,13 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rebex.Sftp" Version="5.0.7999" />
-    <PackageReference Include="Rebex.Ftp" Version="5.0.7999" />
+    <PackageReference Include="Rebex.Sftp" Version="6.0.8060" />
+    <PackageReference Include="Rebex.Ftp" Version="6.0.8060" />
   </ItemGroup>
 
   <ItemGroup>
