@@ -60,12 +60,12 @@ namespace SW.InfolinkAdapters.Receivers.S3
                 await file.CopyToAsync(memoryStream);
                 bytes = memoryStream.ToArray();
             }
-            string base64 = Convert.ToBase64String(bytes);
-            XchangeFile xchangeFile;
-            xchangeFile = Runner.StartupValueOf(CommonProperties.ContentType) switch
+            var base64 = Convert.ToBase64String(bytes);
+            var xchangeFile = Runner.StartupValueOf(CommonProperties.ContentType) switch
             {
-                "text/plain" => new XchangeFile(await new StreamReader(file).ReadToEndAsync(), fileId),
-                _ => new XchangeFile(base64, fileId)
+                "base64" => new XchangeFile(base64, fileId),
+                "utf8" => new XchangeFile(Encoding.UTF8.GetString(bytes), fileId),
+                _ => throw new ArgumentException($"Unknown {nameof(CommonProperties.ResponseEncoding)} '{Runner.StartupValueOf(CommonProperties.ResponseEncoding)}'"),
             };
 
             return xchangeFile;
@@ -76,10 +76,15 @@ namespace SW.InfolinkAdapters.Receivers.S3
             if (Runner.StartupValueOf(CommonProperties.DeleteMovesFileTo) != null)
             {
                 var file = await cloudFiles.OpenReadAsync(fileId);
-                await using var newFile = File.Create(Runner.StartupValueOf(CommonProperties.DeleteMovesFileTo));
-                await file.CopyToAsync(newFile);
-                await cloudFiles.DeleteAsync(fileId);
+                var fileName = Path.GetFileName(fileId);
+                await cloudFiles.WriteAsync(file, new WriteFileSettings()
+                {
+                    Key = Runner.StartupValueOf(CommonProperties.DeleteMovesFileTo) + fileName,
+                    Public = false
+                });
             }
+
+            await cloudFiles.DeleteAsync(fileId);
         }
     }
 }
