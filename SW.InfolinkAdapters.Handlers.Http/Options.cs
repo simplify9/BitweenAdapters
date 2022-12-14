@@ -6,8 +6,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
     {
         public Options()
         {
-            AuthType= Runner.StartupValueOf(CommonProperties.AuthType);
-            ApiKey =  Runner.StartupValueOf(CommonProperties.ApiKey);
+            AuthType = Runner.StartupValueOf(CommonProperties.AuthType);
+            ApiKey = Runner.StartupValueOf(CommonProperties.ApiKey);
             LoginUrl = Runner.StartupValueOf(CommonProperties.LoginUrl);
             LoginUsername = Runner.StartupValueOf(CommonProperties.Username);
             LoginPassword = Runner.StartupValueOf(CommonProperties.Password);
@@ -17,8 +17,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Verb = Runner.StartupValueOf(CommonProperties.Verb);
             CorrelationId = Runner.StartupValueOf(CommonProperties.CorrelationId);
         }
-        
-        
+
+
         // Auth Types:
         // 1. No Auth (default)
         // 2. ApiKey
@@ -34,6 +34,6 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public string ContentType { get; set; }
         public string Headers { get; set; }
         public string CorrelationId { get; set; }
+        public double? Timeout { get; set; }
     }
-    
 }
