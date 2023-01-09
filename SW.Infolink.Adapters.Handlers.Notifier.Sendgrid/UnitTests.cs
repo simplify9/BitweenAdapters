@@ -18,10 +18,10 @@ namespace SW.Infolink.Adapters.Handlers.Notifier.Sendgrid
             var handler = new Handler();
             Runner.MockRun(handler, new ServerlessOptions(),
                 new Dictionary<string, string>{ 
-                    {"ApiKey", "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" },
-                    {"From","autoparts@gig.com.jo"},
-                    {"To","ahmad@simplify9.com,omar@simplify9.com"},
-                    {"Subject","GIG AutoParts || Archiving process failure - فشل في عملية الأرشفة"},
+                    {"ApiKey", "" },
+                    {"From",""},
+                    {"To",""},
+                    {"Subject",""},
                 });
             var rs = await handler.Handle(new XchangeFile(JsonConvert.SerializeObject(new NotificationModel
             {
