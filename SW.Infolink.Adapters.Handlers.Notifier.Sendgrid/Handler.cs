@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
@@ -37,7 +38,17 @@ namespace SW.Infolink.Adapters.Handlers.Notifier.Sendgrid
                     ClickTracking = new ClickTracking { Enable = false }
                 },
             };
-            msg.AddTo(new EmailAddress(Runner.StartupValueOf<string>(CommonProperties.To)));
+            if (Runner.StartupValueOf<string>(CommonProperties.To).Contains(','))
+            {
+                var tos = Runner.StartupValueOf<string>(CommonProperties.To).Split(',')
+                    .Select(e => new EmailAddress(e)).ToList();
+
+                msg.AddTos(tos);
+            }
+            else
+            {
+                msg.AddTo(new EmailAddress(Runner.StartupValueOf<string>(CommonProperties.To)));
+            }
 
             var status = model.Success ? "Succeeded" : "Failed";
             
