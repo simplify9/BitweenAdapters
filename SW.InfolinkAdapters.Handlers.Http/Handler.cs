@@ -30,6 +30,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     return HttpMethod.Post;
             }
         }
+
         public Handler()
         {
             Runner.Expect(CommonProperties.AuthType, null);
@@ -42,6 +43,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Runner.Expect(CommonProperties.ContentType, "application/json");
             Runner.Expect(CommonProperties.Verb, "post");
         }
+
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
             var options = new Options();
@@ -56,7 +58,6 @@ namespace SW.InfolinkAdapters.Handlers.Http
             {
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", options.LoginPassword);
-                
             }
             else if (options.AuthType == "Login")
             {
@@ -66,7 +67,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     Password = options.LoginPassword
                 });
 
-                var loginResponse = await client.PostAsync(new Uri(options.LoginUrl), new StringContent(loginJson, Encoding.UTF8, "application/json"));
+                var loginResponse = await client.PostAsync(new Uri(options.LoginUrl),
+                    new StringContent(loginJson, Encoding.UTF8, "application/json"));
 
                 loginResponse.EnsureSuccessStatusCode();
 
@@ -87,7 +89,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
             switch (options.ContentType.ToLower())
             {
                 case "application/x-www-form-urlencoded":
-                    content = new FormUrlEncodedContent(JsonConvert.DeserializeObject<Dictionary<string, string>>(xchangeFile.Data));
+                    content = new FormUrlEncodedContent(
+                        JsonConvert.DeserializeObject<Dictionary<string, string>>(xchangeFile.Data));
                     break;
                 case "multipart/form-data":
                     MultipartFormDataContent multipartTmp = new MultipartFormDataContent();
@@ -108,8 +111,9 @@ namespace SW.InfolinkAdapters.Handlers.Http
             {
                 string templateData = Runner.StartupValueOf(CommonProperties.Url);
                 Template parsedTemplate = Template.Parse(templateData);
-                IDictionary<string, object> obj = 
-                    JsonConvert.DeserializeObject<IDictionary<string, object>>(xchangeFile.Data, new DictionaryConverter());
+                IDictionary<string, object> obj =
+                    JsonConvert.DeserializeObject<IDictionary<string, object>>(xchangeFile.Data,
+                        new DictionaryConverter());
                 Hash jsonHash = Hash.FromDictionary(obj);
                 uri = new Uri(parsedTemplate.Render(jsonHash));
             }
@@ -121,17 +125,17 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 Method = HttpMethodFromString(options.Verb),
                 Content = content,
             };
-            
+
             var headers = options.Headers?.Split(',').Select(h =>
             {
-                var split = h.Split(':');
+                var split = h.Split(":::");
                 return new KeyValuePair<string, string>(split[0], split[1]);
             });
 
             if (headers != null)
                 foreach (var keyValuePair in headers)
                     request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
-            
+
             request.Headers.Add(RequestContext.CorrelationIdHeaderName, options.CorrelationId);
             var response = await client.SendAsync(request);
 
@@ -139,14 +143,12 @@ namespace SW.InfolinkAdapters.Handlers.Http
             {
                 var resp = await response.Content.ReadAsStringAsync();
 
-                return (int)response.StatusCode < 400 ?
-                    new XchangeFile(resp) :
-                    new XchangeFile(resp, badData: true);
+                return (int)response.StatusCode < 400 ? new XchangeFile(resp) : new XchangeFile(resp, badData: true);
             }
 
+
+            var data = await response.Content.ReadAsStringAsync();
             throw new Exception(response.StatusCode.ToString());
-
-
 
 
             //if (response.IsSuccessStatusCode)
@@ -158,9 +160,6 @@ namespace SW.InfolinkAdapters.Handlers.Http
             //{
             //    throw new Exception(response.StatusCode.ToString());
             //}
-
-
-
         }
     }
 }

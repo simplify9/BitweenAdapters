@@ -1,8 +1,6 @@
-﻿
-using SW.Serverless.Sdk;
+﻿using SW.Serverless.Sdk;
 using System;
 using System.IO;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Rebex.Net;
@@ -14,24 +12,23 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
     {
         public Handler()
         {
-            Runner.Expect(CommonProperties.LicenseKey);
+            Runner.Expect(CommonProperties.LicenseKey, null, true);
             Runner.Expect(CommonProperties.Host);
             Runner.Expect(CommonProperties.Port, null);
             Runner.Expect(CommonProperties.Username);
-            Runner.Expect(CommonProperties.Password);
+            Runner.Expect(CommonProperties.Password, false, true);
             Runner.Expect(CommonProperties.TargetPath, null);
             //Runner.Expect(CommonProperties.FileNamePrefix, null);
             Runner.Expect(CommonProperties.Protocol, "sftp");
-            Runner.Expect(CommonProperties.PrivateKey,null);
+            Runner.Expect(CommonProperties.PrivateKey, null, true);
         }
 
 
         private IFtp ftpOrSftp;
-        
+
 
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
-
             Rebex.Licensing.Key = Runner.StartupValueOf(CommonProperties.LicenseKey);
             var username = Runner.StartupValueOf(CommonProperties.Username);
             var password = Runner.StartupValueOf(CommonProperties.Password);
@@ -44,14 +41,14 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
                     var sftpssh = new Sftp();
                     var sftpsshPort = string.IsNullOrWhiteSpace(port) ? 22 : Convert.ToInt32(port);
                     await sftpssh.ConnectAsync(host, sftpsshPort);
-                    
-                    var keyBytes =  Encoding.UTF8.GetBytes(Runner.StartupValueOf(CommonProperties.PrivateKey));
-                    var privateKey = new SshPrivateKey(keyBytes,password);
+
+                    var keyBytes = Encoding.UTF8.GetBytes(Runner.StartupValueOf(CommonProperties.PrivateKey));
+                    var privateKey = new SshPrivateKey(keyBytes, password);
                     await sftpssh.LoginAsync(username, privateKey);
-                    
+
                     ftpOrSftp = sftpssh;
                     break;
-                
+
                 case "sftp":
 
                     var sftp = new Sftp();
@@ -71,8 +68,8 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
                     break;
 
                 default:
-                    throw new ArgumentException($"Unknown protocol '{Runner.StartupValueOf(CommonProperties.Protocol)}'");
-
+                    throw new ArgumentException(
+                        $"Unknown protocol '{Runner.StartupValueOf(CommonProperties.Protocol)}'");
             }
 
 
@@ -84,7 +81,8 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
             if (string.IsNullOrWhiteSpace(filename))
             {
                 var currentDate = DateTime.UtcNow;
-                filename = $"{currentDate.Year:0000}{currentDate.Month:00}{currentDate.Day:00}{currentDate.Hour:00}{currentDate.Minute:00}{currentDate.Second:00}{currentDate.Millisecond:000}";
+                filename =
+                    $"{currentDate.Year:0000}{currentDate.Month:00}{currentDate.Day:00}{currentDate.Hour:00}{currentDate.Minute:00}{currentDate.Second:00}{currentDate.Millisecond:000}";
             }
 
             //if (!string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.FileNamePrefix)))
@@ -96,7 +94,6 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
 
             await ftpOrSftp.DisconnectAsync();
             return new XchangeFile(string.Empty);
-
         }
     }
 }
