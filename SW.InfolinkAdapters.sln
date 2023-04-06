@@ -63,7 +63,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Receive
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.Infolink.Adapters.Handlers.Notifier.Sendgrid.UnitTests", "SW.Infolink.Adapters.Handlers.Notifier.Sendgrid.UnitTests\SW.Infolink.Adapters.Handlers.Notifier.Sendgrid.UnitTests.csproj", "{D0B3D8AD-CB73-4DD1-95BB-9338B2D3285A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestProject1", "TestProject1\TestProject1.csproj", "{5D0B3041-538C-4494-91E3-F087B0F9D2A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Handlers.Mailgun.UnitTest", "SW.InfolinkAdapters.Handlers.Mailgun.UnitTest\SW.InfolinkAdapters.Handlers.Mailgun.UnitTest.csproj", "{5D0B3041-538C-4494-91E3-F087B0F9D2A5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

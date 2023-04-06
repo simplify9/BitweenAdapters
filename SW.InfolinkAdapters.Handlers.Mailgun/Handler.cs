@@ -5,6 +5,7 @@ using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using System.Web;
 using Newtonsoft.Json;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
@@ -23,15 +24,15 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
         
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
-            IList<IEnumerable<byte>> attachmentsData = new List<IEnumerable<byte>>();
-            MailGunSendRequest mailgunRequest = JsonConvert.DeserializeObject<MailGunSendRequest>(xchangeFile.Data);
+            // IList<IEnumerable<byte>> attachmentsData = new List<IEnumerable<byte>>();
+            var mailgunRequest = JsonConvert.DeserializeObject<MailGunSendRequest>(xchangeFile.Data);
             
             
-            HttpClient client = new HttpClient();
-            string key = Runner.StartupValueOf<string>(CommonProperties.ApiKey);
+            var client = new HttpClient();
+            var key = Runner.StartupValueOf<string>(CommonProperties.ApiKey);
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", key );
             
-            MultipartFormDataContent formContent = new MultipartFormDataContent();
+            var formContent = new MultipartFormDataContent();
             
             formContent.Add(new StringContent(mailgunRequest.To), "to");
             formContent.Add(new StringContent(mailgunRequest.From), "from");
@@ -66,9 +67,9 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
                 }
             }
 
-            string mailgunEndpoint = Runner.StartupValueOf<string>(CommonProperties.Url);
+            var mailgunEndpoint = Runner.StartupValueOf<string>(CommonProperties.Url);
             
-            HttpResponseMessage message = await client.PostAsync(mailgunEndpoint, formContent);
+            var message = await client.PostAsync(mailgunEndpoint, formContent);
             
             return message.IsSuccessStatusCode ? 
                 new XchangeFile(await message.Content.ReadAsStringAsync()) 
