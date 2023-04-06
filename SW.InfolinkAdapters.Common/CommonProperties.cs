@@ -38,10 +38,9 @@ namespace SW.InfolinkAdapters
         //public const string FileNamePrefix = "FileNamePrefix";
         public const string FileNamePrefix = "FileNamePrefix";
         public const string PrivateKey = "PrivateKey";
+        public const string Domain = "Domain";
 
         public const string CorrelationId = Serverless.Sdk.Constants.CorrelationIdName;
-
-
 
 
     }

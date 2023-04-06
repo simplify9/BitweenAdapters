@@ -17,6 +17,7 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
         {
             Runner.Expect(CommonProperties.ApiKey);
             Runner.Expect(CommonProperties.Url);
+            Runner.Expect(CommonProperties.Domain);
             
         }
         
@@ -35,7 +36,8 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
             formContent.Add(new StringContent(mailgunRequest.To), "to");
             formContent.Add(new StringContent(mailgunRequest.From), "from");
             formContent.Add(new StringContent(mailgunRequest.Subject), "subject");
-            
+            formContent.Add(new StringContent(Runner.StartupValueOf(CommonProperties.Domain)), "domain");
+
             
 
             if (mailgunRequest.Template != null)
