@@ -14,8 +14,8 @@ public class UnitTest1
         Runner.MockRun(handler, new ServerlessOptions(), new Dictionary<string, string>
         {
             { "Url", "https://api.mailgun.net/v3/" },
-            {"ApiKey", "YXBpOjE3YjQyOGU3YmY3ZmE0OTdjYWYzNWE3NmU5OWJmZDY5LWQzMmQ4MTdmLTcxMWYxZjk3"},
-            {"Domain", "services.gl-net.com"}
+            {"ApiKey", ""},
+            {"Domain", ""}
         });
 
         //"unpaid-cod/2023-04-06-Open": "https://nyc3.digitaloceanspaces.com/traxis/unpaid-cod/2023-04-06-Open

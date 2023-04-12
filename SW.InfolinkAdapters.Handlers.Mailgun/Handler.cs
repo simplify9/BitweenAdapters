@@ -62,12 +62,15 @@ namespace SW.InfolinkAdapters.Handlers.Mailgun
             {
                 foreach (var pair in mailgunRequest.AttachmentLocations)
                 {
-                    Stream stream = await client.GetStreamAsync(pair.Value);
+                    var httpClient = new HttpClient();
+                    var stream = await httpClient.GetStreamAsync(pair.Value);
                     formContent.Add(new StreamContent(stream), "attachment", pair.Key);
                 }
             }
 
-            var mailgunEndpoint = Runner.StartupValueOf<string>(CommonProperties.Url);
+            var mailgunBaseUrl = Runner.StartupValueOf(CommonProperties.Url);
+            var mailgunDomain = Runner.StartupValueOf(CommonProperties.Domain);
+            var mailgunEndpoint = new Uri($"{mailgunBaseUrl}{mailgunDomain}/messages");
             
             var message = await client.PostAsync(mailgunEndpoint, formContent);
             
