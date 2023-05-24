@@ -27,7 +27,9 @@ public class Handler : IInfolinkHandler
             emailModel.To,
             emailModel.Subject,
             emailModel.Body,
-            emailModel.IsHtml
+            emailModel.IsHtml,
+            emailModel.AttachmentName,
+            emailModel.AttachmentBody
         );
         return Task.FromResult(new XchangeFile(string.Empty));
     }
