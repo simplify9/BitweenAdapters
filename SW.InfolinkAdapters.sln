@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Handler
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Handlers.Smtp.UnitTest", "SW.InfolinkAdapters.Handlers.Smtp.UnitTest\SW.InfolinkAdapters.Handlers.Smtp.UnitTest.csproj", "{63EA6BAF-A925-426E-8E27-604A222226AB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SW.InfolinkAdapters.Handlers.BulkSmtp", "SW.InfolinkAdapters.Handlers.BulkSmtp\SW.InfolinkAdapters.Handlers.BulkSmtp.csproj", "{7B91EBA1-85B3-4C90-85BF-2921795A6098}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -185,6 +187,10 @@ Global
 		{63EA6BAF-A925-426E-8E27-604A222226AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{63EA6BAF-A925-426E-8E27-604A222226AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63EA6BAF-A925-426E-8E27-604A222226AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B91EBA1-85B3-4C90-85BF-2921795A6098}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B91EBA1-85B3-4C90-85BF-2921795A6098}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B91EBA1-85B3-4C90-85BF-2921795A6098}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B91EBA1-85B3-4C90-85BF-2921795A6098}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -218,6 +224,7 @@ Global
 		{D0B3D8AD-CB73-4DD1-95BB-9338B2D3285A} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
 		{704FA7D8-2613-4F8D-8BBE-BC17157587E9} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
 		{63EA6BAF-A925-426E-8E27-604A222226AB} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
+		{7B91EBA1-85B3-4C90-85BF-2921795A6098} = {CE6E2ACC-A062-421A-B066-9020B2486E1E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0190D17A-18D8-4A36-AA09-B479F944496E}
