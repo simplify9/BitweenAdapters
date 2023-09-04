@@ -12,9 +12,10 @@ using SW.Serverless.Sdk;
 
 namespace SW.InfolinkAdapters.Receivers.S3
 {
-    public class Handler: IInfolinkReceiver
+    public class Handler : IInfolinkReceiver
     {
         private CloudFilesService cloudFiles;
+
         public Handler()
         {
             Runner.Expect(CommonProperties.AccessKeyId);
@@ -25,7 +26,9 @@ namespace SW.InfolinkAdapters.Receivers.S3
             Runner.Expect(CommonProperties.BatchSize, "50");
             Runner.Expect(CommonProperties.ContentType, "base64");
             Runner.Expect(CommonProperties.DeleteMovesFileTo, null);
+            Runner.Expect("toDictionaryResult", "false");
         }
+
         public async Task Initialize()
         {
             cloudFiles = new CloudFilesService(new CloudFilesOptions
@@ -47,25 +50,29 @@ namespace SW.InfolinkAdapters.Receivers.S3
             var files = await cloudFiles.ListAsync(key);
             var batchSize = Convert.ToInt32(Runner.StartupValueOf(CommonProperties.BatchSize));
             var filesList = files.Where(f => !f.Key.EndsWith("/")).Select(f => f.Key).Take(batchSize).ToArray();
-            
+
             return filesList;
         }
 
         public async Task<XchangeFile> GetFile(string fileId)
         {
             var file = await cloudFiles.OpenReadAsync(fileId);
-            byte[] bytes;
-            await using (var memoryStream = new MemoryStream())
-            {
-                await file.CopyToAsync(memoryStream);
-                bytes = memoryStream.ToArray();
-            }
+            await using var memoryStream = new MemoryStream();
+            await file.CopyToAsync(memoryStream);
+            var bytes = memoryStream.ToArray();
             var base64 = Convert.ToBase64String(bytes);
+            var stringOutput = Encoding.UTF8.GetString(bytes);
+            if (Runner.StartupValueOf("toDictionaryResult") == "true")
+            {
+                stringOutput = JsonConvert.SerializeObject(new Dictionary<string, string>()
+                {
+                    { "data", stringOutput }
+                });
+            }
             var xchangeFile = Runner.StartupValueOf(CommonProperties.ContentType) switch
             {
-                "base64" => new XchangeFile(base64, fileId),
-                "utf8" => new XchangeFile(Encoding.UTF8.GetString(bytes), fileId),
-                _ => throw new ArgumentException($"Unknown {nameof(CommonProperties.ResponseEncoding)} '{Runner.StartupValueOf(CommonProperties.ResponseEncoding)}'"),
+                "text/plain" => new XchangeFile(stringOutput, Path.GetFileName(fileId)),
+                _ => new XchangeFile(base64, Path.GetFileName(fileId))
             };
 
             return xchangeFile;
