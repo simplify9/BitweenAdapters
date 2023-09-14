@@ -17,10 +17,11 @@ public static class Mailer
         mail.Subject = subject;
         mail.Body = body;
         mail.IsBodyHtml = isBodyHtml;
+
         if (!string.IsNullOrEmpty(emailModelAttachmentName) && !string.IsNullOrEmpty(emailModelAttachmentBody))
         {
-            var textBytes = Encoding.UTF8.GetBytes(emailModelAttachmentBody);
-            var memoryStream = new MemoryStream(textBytes);
+            byte[] byteArray = Convert.FromBase64String(emailModelAttachmentBody);
+            var memoryStream = new MemoryStream(byteArray);
             var attachment = new Attachment(memoryStream, emailModelAttachmentName);
             mail.Attachments.Add(attachment);
         }
