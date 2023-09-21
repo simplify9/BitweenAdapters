@@ -25,11 +25,15 @@ public class Handler : IInfolinkHandler
             Runner.StartupValueOf(CommonProperties.From),
             Runner.StartupValueOf(CommonProperties.Password),
             emailModel.To,
+            emailModel.OtherTo,
+            emailModel.Cc,
+            emailModel.Bcc,
             emailModel.Subject,
             emailModel.Body,
             emailModel.IsHtml,
             emailModel.AttachmentName,
-            emailModel.AttachmentBody
+            emailModel.AttachmentBody,
+            false
         );
         return Task.FromResult(new XchangeFile(string.Empty));
     }
