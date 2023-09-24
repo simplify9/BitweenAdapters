@@ -9,7 +9,7 @@ public static class Mailer
 {
     public static void SendEmail(string smtpHost, int smtpPort, string fromEmail, string fromPassword,
         string toEmail,
-        List<string> otherTo, List<string> cc, List<string> bcc,
+        List<string>? otherTo, List<string>? cc, List<string>? bcc,
         string subject, string body, bool isBodyHtml, string emailModelAttachmentName, string emailModelAttachmentBody,
         bool enableSsl)
     {
@@ -17,20 +17,30 @@ public static class Mailer
         mail.From = new MailAddress(fromEmail);
         mail.To.Add(toEmail);
 
-        foreach (var toMail in otherTo)
+        if (otherTo is not null)
         {
-            mail.To.Add(toMail);
+            foreach (var toMail in otherTo)
+            {
+                mail.To.Add(toMail);
+            }
         }
 
-        foreach (var toMail in cc)
+        if (cc is not null)
         {
-            mail.CC.Add(toMail);
+            foreach (var toMail in cc)
+            {
+                mail.CC.Add(toMail);
+            }
         }
 
-        foreach (var toMail in bcc)
+        if (bcc is not null)
         {
-            mail.Bcc.Add(toMail);
+            foreach (var toMail in bcc)
+            {
+                mail.Bcc.Add(toMail);
+            }
         }
+
 
         mail.Subject = subject;
         mail.Body = body;
