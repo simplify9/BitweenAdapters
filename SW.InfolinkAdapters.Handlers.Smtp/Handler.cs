@@ -12,6 +12,26 @@ public class Handler : IInfolinkHandler
         Runner.Expect(CommonProperties.Host);
         Runner.Expect(CommonProperties.From);
         Runner.Expect(CommonProperties.Password);
+        Runner.Expect("Cc");
+        Runner.Expect("Bcc");
+    }
+
+    private static List<string> GetMailList(List<string>? emailModelBcc, string startupValueKey)
+    {
+        var emails = new List<string>();
+
+        if (emailModelBcc is not null)
+        {
+            emails.AddRange(emailModelBcc);
+        }
+
+        var value = Runner.StartupValueOf(startupValueKey);
+        if (!string.IsNullOrEmpty(value))
+        {
+            emails.AddRange(value.Split(",").Select(i => i.Trim()));
+        }
+
+        return emails;
     }
 
     public Task<XchangeFile> Handle(XchangeFile xchangeFile)
@@ -26,8 +46,8 @@ public class Handler : IInfolinkHandler
             Runner.StartupValueOf(CommonProperties.Password),
             emailModel.To,
             emailModel.OtherTo,
-            emailModel.Cc,
-            emailModel.Bcc,
+            GetMailList(emailModel.Cc, "Cc"),
+            GetMailList(emailModel.Bcc, "Bcc"),
             emailModel.Subject,
             emailModel.Body,
             emailModel.IsHtml,
