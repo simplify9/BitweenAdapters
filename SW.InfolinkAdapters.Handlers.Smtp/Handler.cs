@@ -12,8 +12,9 @@ public class Handler : IInfolinkHandler
         Runner.Expect(CommonProperties.Host);
         Runner.Expect(CommonProperties.From);
         Runner.Expect(CommonProperties.Password);
-        Runner.Expect("Cc");
-        Runner.Expect("Bcc");
+        Runner.Expect(CommonProperties.To, null);
+        Runner.Expect("Cc", null);
+        Runner.Expect("Bcc", null);
     }
 
     private static List<string> GetMailList(List<string>? emailModelBcc, string startupValueKey)
@@ -38,13 +39,15 @@ public class Handler : IInfolinkHandler
     {
         var emailModel = JsonConvert.DeserializeObject<InputModel>(xchangeFile.Data);
 
+        var startupEmail = Runner.StartupValueOf(CommonProperties.Host);
+        var emailTo = string.IsNullOrEmpty(startupEmail) ? emailModel.To : startupEmail;
 
         Mailer.SendEmail(
             Runner.StartupValueOf(CommonProperties.Host),
             Convert.ToInt32(Runner.StartupValueOf(CommonProperties.Port)),
             Runner.StartupValueOf(CommonProperties.From),
             Runner.StartupValueOf(CommonProperties.Password),
-            emailModel.To,
+            emailTo,
             emailModel.OtherTo,
             GetMailList(emailModel.Cc, "Cc"),
             GetMailList(emailModel.Bcc, "Bcc"),
