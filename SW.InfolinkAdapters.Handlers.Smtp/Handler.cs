@@ -39,7 +39,7 @@ public class Handler : IInfolinkHandler
     {
         var emailModel = JsonConvert.DeserializeObject<InputModel>(xchangeFile.Data);
 
-        var startupEmail = Runner.StartupValueOf(CommonProperties.Host);
+        var startupEmail = Runner.StartupValueOf(CommonProperties.To);
         var emailTo = string.IsNullOrEmpty(startupEmail) ? emailModel.To : startupEmail;
 
         Mailer.SendEmail(
