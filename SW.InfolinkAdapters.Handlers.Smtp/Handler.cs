@@ -13,17 +13,18 @@ public class Handler : IInfolinkHandler
         Runner.Expect(CommonProperties.From);
         Runner.Expect(CommonProperties.Password);
         Runner.Expect(CommonProperties.To, null);
+        Runner.Expect("OtherTo", null);
         Runner.Expect("Cc", null);
         Runner.Expect("Bcc", null);
     }
 
-    private static List<string> GetMailList(List<string>? emailModelBcc, string startupValueKey)
+    private static List<string> GetMailList(List<string>? mails, string startupValueKey)
     {
         var emails = new List<string>();
 
-        if (emailModelBcc is not null)
+        if (mails is not null)
         {
-            emails.AddRange(emailModelBcc);
+            emails.AddRange(mails);
         }
 
         var value = Runner.StartupValueOf(startupValueKey);
@@ -41,6 +42,13 @@ public class Handler : IInfolinkHandler
 
         var startupEmail = Runner.StartupValueOf(CommonProperties.To);
         var emailTo = string.IsNullOrEmpty(startupEmail) ? emailModel.To : startupEmail;
+        var toList = Runner.StartupValueOf("ToList");
+
+        if (!string.IsNullOrWhiteSpace(toList))
+        {
+            emailModel.OtherTo ??= new List<string>();
+            emailModel.OtherTo.AddRange(toList.Split(",").Select(i => i.Trim()));
+        }
 
         Mailer.SendEmail(
             Runner.StartupValueOf(CommonProperties.Host),
