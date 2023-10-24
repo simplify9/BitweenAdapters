@@ -42,7 +42,7 @@ public class Handler : IInfolinkHandler
 
         var startupEmail = Runner.StartupValueOf(CommonProperties.To);
         var emailTo = string.IsNullOrEmpty(startupEmail) ? emailModel.To : startupEmail;
-        var toList = Runner.StartupValueOf("ToList");
+        var toList = Runner.StartupValueOf("OtherTo");
 
         if (!string.IsNullOrWhiteSpace(toList))
         {
