@@ -15,7 +15,10 @@ public static class Mailer
     {
         using var mail = new MailMessage();
         mail.From = new MailAddress(fromEmail);
-        mail.To.Add(toEmail);
+
+        if (!string.IsNullOrEmpty(toEmail))
+            mail.To.Add(toEmail);
+
 
         if (otherTo is not null)
         {
