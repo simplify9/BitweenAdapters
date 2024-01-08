@@ -162,8 +162,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
 
                 return (int)response.StatusCode < 400 ? new XchangeFile(resp) : new XchangeFile(resp, badData: true);
             }
-
-
+            
             var data = await response.Content.ReadAsStringAsync();
             throw new Exception(response.StatusCode.ToString());
 
