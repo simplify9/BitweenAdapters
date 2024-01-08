@@ -11,4 +11,9 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public string Jwt { get; set; }
         public string Refresh { get; set; }
     }
+    
+    public class OAuth2Response
+    {
+        public string access_token { get; set; }
+    }
 }

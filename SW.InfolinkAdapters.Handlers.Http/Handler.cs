@@ -42,6 +42,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Runner.Expect(CommonProperties.Headers, null);
             Runner.Expect(CommonProperties.ContentType, "application/json");
             Runner.Expect(CommonProperties.Verb, "post");
+            Runner.Expect(CommonProperties.ClientId, null);
+            Runner.Expect(CommonProperties.ClientSecret, null);
         }
 
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
@@ -83,6 +85,21 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 {
                     throw new Exception(loginResponse.StatusCode.ToString());
                 }
+            } 
+            else if (options.AuthType == "OAuth2")
+            {
+                var oathRequest = new HttpRequestMessage(HttpMethod.Post, options.LoginUrl);
+                var oauthContentDictionary = new List<KeyValuePair<string, string>>();
+                oauthContentDictionary.Add(new("client_id", options.ClientId));
+                oauthContentDictionary.Add(new("client_secret", options.ClientSecret));
+                oauthContentDictionary.Add(new("grant_type", "client_credentials"));
+                var oauthContent = new FormUrlEncodedContent(oauthContentDictionary);
+                oathRequest.Content = oauthContent;
+                var oauthResponse = await client.SendAsync(oathRequest);
+                var res = await oauthResponse.Content.ReadAsStringAsync();
+                var resDeserialized = JsonConvert.DeserializeObject<OAuth2Response>(res);
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", resDeserialized.access_token);
             }
 
             HttpContent content;
@@ -106,7 +123,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     break;
             }
 
-            Uri uri = null;
+            Uri uri;
             if (!string.IsNullOrEmpty(xchangeFile.Data) && options.Url.Contains("{{"))
             {
                 string templateData = Runner.StartupValueOf(CommonProperties.Url);
@@ -145,12 +162,10 @@ namespace SW.InfolinkAdapters.Handlers.Http
 
                 return (int)response.StatusCode < 400 ? new XchangeFile(resp) : new XchangeFile(resp, badData: true);
             }
-
-
+            
             var data = await response.Content.ReadAsStringAsync();
             throw new Exception(response.StatusCode.ToString());
-
-
+            
             //if (response.IsSuccessStatusCode)
             //{
             //    var resp = await response.Content.ReadAsStringAsync();

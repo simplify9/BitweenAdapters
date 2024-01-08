@@ -16,6 +16,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Headers = Runner.StartupValueOf(CommonProperties.Headers);
             Verb = Runner.StartupValueOf(CommonProperties.Verb);
             CorrelationId = Runner.StartupValueOf(CommonProperties.CorrelationId);
+            ClientId = Runner.StartupValueOf(CommonProperties.ClientId);
+            ClientSecret = Runner.StartupValueOf(CommonProperties.ClientSecret);
         }
         
         
@@ -34,6 +36,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public string ContentType { get; set; }
         public string Headers { get; set; }
         public string CorrelationId { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
     }
     
 }
