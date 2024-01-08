@@ -165,8 +165,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             
             var data = await response.Content.ReadAsStringAsync();
             throw new Exception(response.StatusCode.ToString());
-
-
+            
             //if (response.IsSuccessStatusCode)
             //{
             //    var resp = await response.Content.ReadAsStringAsync();
