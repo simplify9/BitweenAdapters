@@ -32,9 +32,9 @@ namespace SW.InfolinkAdapters.Handlers.Http
 
         public Handler()
         {
-            Runner.Expect("AuthType", "OAuth2");
+            Runner.Expect("AuthType", null);
             Runner.Expect("ApiKey", null);
-            Runner.Expect("LoginUrl", "https://apis-sandbox.fedex.com/oauth/token");
+            Runner.Expect("LoginUrl", null);
             Runner.Expect("Username", null);
             Runner.Expect("Password", null);
             Runner.Expect("Url");
@@ -42,8 +42,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
             Runner.Expect("ContentType", "application/json");
             Runner.Expect("Verb", "post");
             Runner.Expect("DefaultRequest", null);
-            Runner.Expect(CommonProperties.ClientId, "l7938eae4705bc45f89ec82e64f714254c");
-            Runner.Expect(CommonProperties.ClientSecret, "ae73378237204ccaa6733d6036ed8356");
+            Runner.Expect(CommonProperties.ClientId, null);
+            Runner.Expect(CommonProperties.ClientSecret, null);
         }
 
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
