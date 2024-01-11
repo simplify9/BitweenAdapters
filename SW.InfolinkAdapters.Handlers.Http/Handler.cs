@@ -1,3 +1,7 @@
+using DotLiquid;
+using Newtonsoft.Json;
+using SW.PrimitiveTypes;
+using SW.Serverless.Sdk;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,10 +10,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using DotLiquid;
-using Newtonsoft.Json;
-using SW.PrimitiveTypes;
-using SW.Serverless.Sdk;
 
 namespace SW.InfolinkAdapters.Handlers.Http
 {
@@ -25,7 +25,6 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     return HttpMethod.Delete;
                 case "put":
                     return HttpMethod.Put;
-                case "post":
                 default:
                     return HttpMethod.Post;
             }
@@ -33,59 +32,53 @@ namespace SW.InfolinkAdapters.Handlers.Http
 
         public Handler()
         {
-            Runner.Expect(CommonProperties.AuthType, null);
-            Runner.Expect(CommonProperties.ApiKey, null);
-            Runner.Expect(CommonProperties.LoginUrl, null);
-            Runner.Expect(CommonProperties.Username, null);
-            Runner.Expect(CommonProperties.Password, null);
-            Runner.Expect(CommonProperties.Url);
-            Runner.Expect(CommonProperties.Headers, null);
-            Runner.Expect(CommonProperties.ContentType, "application/json");
-            Runner.Expect(CommonProperties.Verb, "post");
-            Runner.Expect(CommonProperties.ClientId, null);
-            Runner.Expect(CommonProperties.ClientSecret, null);
+            Runner.Expect("AuthType", "OAuth2");
+            Runner.Expect("ApiKey", null);
+            Runner.Expect("LoginUrl", "https://apis-sandbox.fedex.com/oauth/token");
+            Runner.Expect("Username", null);
+            Runner.Expect("Password", null);
+            Runner.Expect("Url");
+            Runner.Expect("Headers", null);
+            Runner.Expect("ContentType", "application/json");
+            Runner.Expect("Verb", "post");
+            Runner.Expect("DefaultRequest", null);
+            Runner.Expect(CommonProperties.ClientId, "l7938eae4705bc45f89ec82e64f714254c");
+            Runner.Expect(CommonProperties.ClientSecret, "ae73378237204ccaa6733d6036ed8356");
         }
 
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
-            var options = new Options();
-
-            var client = new HttpClient();
-
+            Options options = new Options();
+            HttpClient client = new HttpClient();
             if (options.AuthType == "ApiKey")
-            {
                 client.DefaultRequestHeaders.Add("ApiKey", options.ApiKey);
-            }
             else if (options.AuthType == "Bearer")
-            {
                 client.DefaultRequestHeaders.Authorization =
                     new AuthenticationHeaderValue("Bearer", options.LoginPassword);
+            else if (options.AuthType == "Basic")
+            {
+                string credentials =
+                    Convert.ToBase64String(
+                        Encoding.ASCII.GetBytes(options.LoginUsername + ":" + options.LoginPassword));
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", credentials);
             }
             else if (options.AuthType == "Login")
             {
-                var loginJson = JsonConvert.SerializeObject(new UserLoginModel()
+                string loginJson = JsonConvert.SerializeObject((object)new UserLoginModel()
                 {
                     Email = options.LoginUsername,
                     Password = options.LoginPassword
                 });
-
-                var loginResponse = await client.PostAsync(new Uri(options.LoginUrl),
+                HttpResponseMessage loginResponse = await client.PostAsync(new Uri(options.LoginUrl),
                     new StringContent(loginJson, Encoding.UTF8, "application/json"));
-
                 loginResponse.EnsureSuccessStatusCode();
-
-                if (loginResponse.StatusCode == HttpStatusCode.OK)
-                {
-                    var rs = await loginResponse.Content.ReadAsStringAsync();
-                    LoginResponse rsDeserialized = JsonConvert.DeserializeObject<LoginResponse>(rs);
-                    client.DefaultRequestHeaders.Authorization =
-                        new AuthenticationHeaderValue("Bearer", rsDeserialized.Jwt);
-                }
-                else
-                {
+                if (loginResponse.StatusCode != HttpStatusCode.OK)
                     throw new Exception(loginResponse.StatusCode.ToString());
-                }
-            } 
+                string rs = await loginResponse.Content.ReadAsStringAsync();
+                LoginResponse rsDeserialized = JsonConvert.DeserializeObject<LoginResponse>(rs);
+                client.DefaultRequestHeaders.Authorization =
+                    new AuthenticationHeaderValue("Bearer", rsDeserialized.Jwt);
+            }
             else if (options.AuthType == "OAuth2")
             {
                 var oathRequest = new HttpRequestMessage(HttpMethod.Post, options.LoginUrl);
@@ -102,79 +95,79 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     new AuthenticationHeaderValue("Bearer", resDeserialized.access_token);
             }
 
+            string requestBody = xchangeFile.Data;
+            if (string.IsNullOrEmpty(requestBody))
+                requestBody = Runner.StartupValueOf("DefaultRequest");
+            string str = options.ContentType.ToLower();
             HttpContent content;
-            switch (options.ContentType.ToLower())
+            MultipartFormDataContent multipartTmp;
+            byte[] fileContent;
+            switch (str)
             {
                 case "application/x-www-form-urlencoded":
-                    content = new FormUrlEncodedContent(
-                        JsonConvert.DeserializeObject<Dictionary<string, string>>(xchangeFile.Data));
+                    content = (HttpContent)new FormUrlEncodedContent(
+                        JsonConvert.DeserializeObject<Dictionary<string, string>>(requestBody));
                     break;
                 case "multipart/form-data":
-                    MultipartFormDataContent multipartTmp = new MultipartFormDataContent();
-                    byte[] fileContent = Encoding.UTF8.GetBytes(xchangeFile.Data);
+                    multipartTmp = new MultipartFormDataContent();
+                    fileContent = Encoding.UTF8.GetBytes(requestBody);
                     multipartTmp.Add(new ByteArrayContent(fileContent), "file", xchangeFile.Filename ?? "file");
                     content = multipartTmp;
                     break;
                 case "application/json":
-                    content = new StringContent(xchangeFile.Data, Encoding.UTF8, "application/json");
+                    content = new StringContent(requestBody, Encoding.UTF8, "application/json");
                     break;
                 default:
-                    content = new StringContent(xchangeFile.Data, Encoding.UTF8, options.ContentType);
+                    content = new StringContent(requestBody, Encoding.UTF8, options.ContentType);
                     break;
             }
 
             Uri uri;
             if (!string.IsNullOrEmpty(xchangeFile.Data) && options.Url.Contains("{{"))
             {
-                string templateData = Runner.StartupValueOf(CommonProperties.Url);
+                string templateData = Runner.StartupValueOf("Url");
                 Template parsedTemplate = Template.Parse(templateData);
                 IDictionary<string, object> obj =
                     JsonConvert.DeserializeObject<IDictionary<string, object>>(xchangeFile.Data,
-                        new DictionaryConverter());
+                        (JsonConverter)new DictionaryConverter());
                 Hash jsonHash = Hash.FromDictionary(obj);
                 uri = new Uri(parsedTemplate.Render(jsonHash));
             }
-            else uri = new Uri(options.Url);
+            else
+                uri = new Uri(options.Url);
 
-            var request = new HttpRequestMessage
+            HttpRequestMessage request = new HttpRequestMessage()
             {
                 RequestUri = uri,
                 Method = HttpMethodFromString(options.Verb),
-                Content = content,
+                Content = content
             };
-
-            var headers = options.Headers?.Split(',').Select(h =>
-            {
-                var split = h.Split(":::");
-                return new KeyValuePair<string, string>(split[0], split[1]);
-            });
-
+            string headers1 = options.Headers;
+            IEnumerable<KeyValuePair<string, string>> headers = headers1 != null
+                ? (headers1.Split(',')).Select((Func<string, KeyValuePair<string, string>>)(h =>
+                {
+                    string[] strArray = h.Split(':');
+                    return new KeyValuePair<string, string>(strArray[0], strArray[1]);
+                }))
+                : null;
             if (headers != null)
-                foreach (var keyValuePair in headers)
-                    request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
-
-            request.Headers.Add(RequestContext.CorrelationIdHeaderName, options.CorrelationId);
-            var response = await client.SendAsync(request);
-
-            if ((int)response.StatusCode >= 200 && (int)response.StatusCode < 500)
             {
-                var resp = await response.Content.ReadAsStringAsync();
-
-                return (int)response.StatusCode < 400 ? new XchangeFile(resp) : new XchangeFile(resp, badData: true);
+                foreach (KeyValuePair<string, string> keyValuePair1 in headers)
+                {
+                    KeyValuePair<string, string> keyValuePair = keyValuePair1;
+                    request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
+                }
             }
-            
-            var data = await response.Content.ReadAsStringAsync();
-            throw new Exception(response.StatusCode.ToString());
-            
-            //if (response.IsSuccessStatusCode)
-            //{
-            //    var resp = await response.Content.ReadAsStringAsync();
-            //    return new XchangeFile(resp);
-            //}
-            //else
-            //{
-            //    throw new Exception(response.StatusCode.ToString());
-            //}
+
+            request.Headers.Add("request-context-correlation-id", options.CorrelationId);
+            HttpResponseMessage response = await client.SendAsync(request);
+            if (response.StatusCode < HttpStatusCode.OK || response.StatusCode >= HttpStatusCode.InternalServerError)
+                throw new Exception(response.StatusCode.ToString());
+            string resp = await response.Content.ReadAsStringAsync();
+            XchangeFile xchangeFile1 = response.StatusCode < HttpStatusCode.BadRequest
+                ? new XchangeFile(resp)
+                : new XchangeFile(resp, badData: true);
+            return xchangeFile1;
         }
     }
 }

@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Newtonsoft.Json.Serialization;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
@@ -52,7 +50,7 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
             var b64Data = Convert.ToBase64String(Encoding.Default.GetBytes(data));
             Assert.AreEqual(b64cleaned, b64Data);
         }
-
+        
         [TestMethod]
         public async Task TestUrlEncoded()
         {
@@ -72,7 +70,7 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
             var rsVals = JToken.Parse(rs.Data)["form"].ToString(Formatting.None);
             Assert.AreEqual(rsVals, data);
         }
-
+        
         [TestMethod]
         public async Task TestHeaders()
         {
@@ -88,17 +86,17 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
                     { "Url", "https://postman-echo.com/post" },
                     { "Headers", headers }
                 });
-
+        
             var rs = await handler.Handle(new XchangeFile(""));
-
+        
             var someheader = JToken.Parse(rs.Data)["headers"]["someheader"].Value<string>();
             var apiKey = JToken.Parse(rs.Data)["headers"]["api-key"].Value<string>();
-
-
+        
+        
             Assert.AreEqual(someheader, "SomeValue");
             Assert.AreEqual(apiKey, "Something");
         }
-
+        
         [TestMethod]
         public async Task TestGet()
         {
@@ -109,12 +107,12 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
                     { "Url", "https://postman-echo.com/get?test=1" },
                     { "Verb", "get" }
                 });
-
+        
             var rs = await handler.Handle(new XchangeFile(""));
             var test = JToken.Parse(rs.Data)["args"]["test"].Value<string>();
             Assert.AreEqual(test, "1");
         }
-
+        
         [TestMethod]
         public async Task TestGetParameterized()
         {
@@ -125,7 +123,7 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
                     { "Url", "https://postman-echo.com/get?test={{param1}}" },
                     { "Verb", "get" }
                 });
-
+        
             var rs = await handler.Handle(new XchangeFile(JsonConvert.SerializeObject(new
             {
                 param1 = 1
@@ -133,7 +131,7 @@ namespace SW.InfolinkAdapters.Handlers.Http.UnitTests
             var test = JToken.Parse(rs.Data)["args"]["test"].Value<string>();
             Assert.AreEqual(test, "1");
         }
-
+        
         [TestMethod]
         public async Task TestXML()
         {
