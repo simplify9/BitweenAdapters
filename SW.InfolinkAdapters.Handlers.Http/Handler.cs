@@ -32,15 +32,15 @@ namespace SW.InfolinkAdapters.Handlers.Http
 
         public Handler()
         {
-            Runner.Expect("AuthType", null);
-            Runner.Expect("ApiKey", null);
-            Runner.Expect("LoginUrl", null);
-            Runner.Expect("Username", null);
-            Runner.Expect("Password", null);
-            Runner.Expect("Url");
-            Runner.Expect("Headers", null);
-            Runner.Expect("ContentType", "application/json");
-            Runner.Expect("Verb", "post");
+            Runner.Expect(CommonProperties.AuthType, null);
+            Runner.Expect(CommonProperties.ApiKey, null);
+            Runner.Expect(CommonProperties.LoginUrl, null);
+            Runner.Expect(CommonProperties.Username, null);
+            Runner.Expect(CommonProperties.Password, null);
+            Runner.Expect(CommonProperties.Url);
+            Runner.Expect(CommonProperties.Headers, null);
+            Runner.Expect(CommonProperties.ContentType, "application/json");
+            Runner.Expect(CommonProperties.Verb, "post");
             Runner.Expect("DefaultRequest", null);
             Runner.Expect(CommonProperties.ClientId, null);
             Runner.Expect(CommonProperties.ClientSecret, null);
@@ -83,9 +83,9 @@ namespace SW.InfolinkAdapters.Handlers.Http
             {
                 var oathRequest = new HttpRequestMessage(HttpMethod.Post, options.LoginUrl);
                 var oauthContentDictionary = new List<KeyValuePair<string, string>>();
-                oauthContentDictionary.Add(new("client_id", options.ClientId));
-                oauthContentDictionary.Add(new("client_secret", options.ClientSecret));
-                oauthContentDictionary.Add(new("grant_type", "client_credentials"));
+                oauthContentDictionary.Add(new KeyValuePair<string, string>("client_id", options.ClientId));
+                oauthContentDictionary.Add(new KeyValuePair<string, string>("client_secret", options.ClientSecret));
+                oauthContentDictionary.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
                 var oauthContent = new FormUrlEncodedContent(oauthContentDictionary);
                 oathRequest.Content = oauthContent;
                 var oauthResponse = await client.SendAsync(oathRequest);
