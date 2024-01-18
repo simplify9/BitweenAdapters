@@ -49,7 +49,10 @@ namespace SW.InfolinkAdapters.Handlers.Http
         public async Task<XchangeFile> Handle(XchangeFile xchangeFile)
         {
             Options options = new Options();
-            HttpClient client = new HttpClient();
+            var handler = new HttpClientHandler
+                { AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate };
+            HttpClient client = new HttpClient(handler);
+            
             if (options.AuthType == "ApiKey")
                 client.DefaultRequestHeaders.Add("ApiKey", options.ApiKey);
             else if (options.AuthType == "Bearer")
@@ -129,7 +132,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
                 Template parsedTemplate = Template.Parse(templateData);
                 IDictionary<string, object> obj =
                     JsonConvert.DeserializeObject<IDictionary<string, object>>(xchangeFile.Data,
-                        (JsonConverter)new DictionaryConverter());
+                        new DictionaryConverter());
                 Hash jsonHash = Hash.FromDictionary(obj);
                 uri = new Uri(parsedTemplate.Render(jsonHash));
             }
@@ -158,8 +161,8 @@ namespace SW.InfolinkAdapters.Handlers.Http
                     request.Headers.Add(keyValuePair.Key, keyValuePair.Value);
                 }
             }
-
             request.Headers.Add("request-context-correlation-id", options.CorrelationId);
+
             HttpResponseMessage response = await client.SendAsync(request);
             if (response.StatusCode < HttpStatusCode.OK || response.StatusCode >= HttpStatusCode.InternalServerError)
                 throw new Exception(response.StatusCode.ToString());
