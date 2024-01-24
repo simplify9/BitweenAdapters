@@ -22,9 +22,12 @@ namespace SW.InfolinkAdapters.Receivers.Http
       Runner.Expect(CommonProperties.Username,  null);
       Runner.Expect(CommonProperties.Password,  null);
       Runner.Expect(CommonProperties.Url);
-      Runner.Expect(CommonProperties.Headers,  null);
+      Runner.Expect(CommonProperties.Headers, null);
       Runner.Expect(CommonProperties.ContentType, "application/json");
       Runner.Expect(CommonProperties.Verb, "get");
+      Runner.Expect(CommonProperties.ClientId, null);
+      Runner.Expect(CommonProperties.ClientSecret, null);
+      Runner.Expect("DefaultRequest", null);
     }
 
     private HttpMethod HttpMethodFromString(string method)
@@ -54,7 +57,7 @@ namespace SW.InfolinkAdapters.Receivers.Http
 
     public async Task<IEnumerable<string>> ListFiles()
     {
-      string[] strArray = await Task.FromResult<string[]>(new string[1]
+      string[] strArray = await Task.FromResult(new []
       {
         "1"
       });
@@ -74,7 +77,22 @@ namespace SW.InfolinkAdapters.Receivers.Http
       }
       else if (options.AuthType == "Bearer")
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.LoginPassword);
-      HttpContent content = (HttpContent) null;
+      else if (options.AuthType == "OAuth2")
+      {
+        var oathRequest = new HttpRequestMessage(HttpMethod.Post, options.LoginUrl);
+        var oauthContentDictionary = new List<KeyValuePair<string, string>>();
+        oauthContentDictionary.Add(new KeyValuePair<string, string>("client_id", options.ClientId));
+        oauthContentDictionary.Add(new KeyValuePair<string, string>("client_secret", options.ClientSecret));
+        oauthContentDictionary.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
+        var oauthContent = new FormUrlEncodedContent(oauthContentDictionary);
+        oathRequest.Content = oauthContent;
+        var oauthResponse = await client.SendAsync(oathRequest);
+        var res = await oauthResponse.Content.ReadAsStringAsync();
+        var resDeserialized = JsonConvert.DeserializeObject<OAuth2Response>(res);
+        client.DefaultRequestHeaders.Authorization =
+          new AuthenticationHeaderValue("Bearer", resDeserialized.access_token);
+      }
+      HttpContent content = null;
       if (!string.IsNullOrEmpty(Runner.StartupValueOf("DefaultRequest")))
       {
         string requestBody = Runner.StartupValueOf("DefaultRequest");
@@ -82,13 +100,13 @@ namespace SW.InfolinkAdapters.Receivers.Http
         switch (str)
         {
           case "application/x-www-form-urlencoded":
-            content =  new FormUrlEncodedContent( JsonConvert.DeserializeObject<Dictionary<string, string>>(requestBody));
+            content = new FormUrlEncodedContent(JsonConvert.DeserializeObject<Dictionary<string, string>>(requestBody));
             break;
           case "application/json":
-            content =  new StringContent(requestBody, Encoding.UTF8, "application/json");
+            content = new StringContent(requestBody, Encoding.UTF8, "application/json");
             break;
           default:
-            content =  new StringContent(requestBody, Encoding.UTF8, options.ContentType);
+            content = new StringContent(requestBody, Encoding.UTF8, options.ContentType);
             break;
         }
       }
@@ -100,11 +118,11 @@ namespace SW.InfolinkAdapters.Receivers.Http
         Content = content
       };
       string headers1 = options.Headers;
-      IEnumerable<KeyValuePair<string, string>> headers = headers1 != null ? ( headers1.Split(',')).Select((Func<string, KeyValuePair<string, string>>) (h =>
+      IEnumerable<KeyValuePair<string, string>> headers = headers1 != null ? (headers1.Split(',')).Select((Func<string, KeyValuePair<string, string>>) (h =>
       {
         string[] strArray = h.Split(':');
         return new KeyValuePair<string, string>(strArray[0], strArray[1]);
-      })) :  null;
+      })) : null;
       if (headers != null)
       {
         foreach (KeyValuePair<string, string> keyValuePair1 in headers)
