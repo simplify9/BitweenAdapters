@@ -64,7 +64,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             }
             else if (options.AuthType == "Login")
             {
-                string loginJson = JsonConvert.SerializeObject((object)new UserLoginModel()
+                string loginJson = JsonConvert.SerializeObject(new UserLoginModel()
                 {
                     Email = options.LoginUsername,
                     Password = options.LoginPassword
@@ -105,7 +105,7 @@ namespace SW.InfolinkAdapters.Handlers.Http
             switch (str)
             {
                 case "application/x-www-form-urlencoded":
-                    content = (HttpContent)new FormUrlEncodedContent(
+                    content = new FormUrlEncodedContent(
                         JsonConvert.DeserializeObject<Dictionary<string, string>>(requestBody));
                     break;
                 case "multipart/form-data":
