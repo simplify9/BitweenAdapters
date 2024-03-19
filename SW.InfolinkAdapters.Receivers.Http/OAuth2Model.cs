@@ -10,6 +10,7 @@ public class UserLoginModel
     public string Password { get; set; }
 }
 
+
 public class LoginResponse
 {
     public string Jwt { get; set; }
