@@ -77,6 +77,23 @@ namespace SW.InfolinkAdapters.Receivers.Http
       }
       else if (options.AuthType == "Bearer")
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.LoginPassword);
+      else if (options.AuthType == "Login")
+      {
+        string loginJson = JsonConvert.SerializeObject(new UserLoginModel()
+        {
+          Email = options.LoginUsername,
+          Password = options.LoginPassword
+        });
+        HttpResponseMessage loginResponse = await client.PostAsync(new Uri(options.LoginUrl),
+          new StringContent(loginJson, Encoding.UTF8, "application/json"));
+        loginResponse.EnsureSuccessStatusCode();
+        if (loginResponse.StatusCode != HttpStatusCode.OK)
+          throw new Exception(loginResponse.StatusCode.ToString());
+        string rs = await loginResponse.Content.ReadAsStringAsync();
+        LoginResponse rsDeserialized = JsonConvert.DeserializeObject<LoginResponse>(rs);
+        client.DefaultRequestHeaders.Authorization =
+          new AuthenticationHeaderValue("Bearer", rsDeserialized.Jwt);
+      }
       else if (options.AuthType == "OAuth2")
       {
         var oathRequest = new HttpRequestMessage(HttpMethod.Post, options.LoginUrl);
