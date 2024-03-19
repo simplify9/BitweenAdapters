@@ -15,6 +15,8 @@ namespace SW.InfolinkAdapters.Receivers.Http
             ContentType = Runner.StartupValueOf(CommonProperties.ContentType);
             Headers = Runner.StartupValueOf(CommonProperties.Headers);
             Verb = Runner.StartupValueOf(CommonProperties.Verb);
+            ClientId = Runner.StartupValueOf(CommonProperties.ClientId);
+            ClientSecret = Runner.StartupValueOf(CommonProperties.ClientSecret);
         }
         
         
@@ -31,5 +33,7 @@ namespace SW.InfolinkAdapters.Receivers.Http
         public string Url { get; set; }
         public string ContentType { get; set; }
         public string Headers { get; set; }
+        public string ClientId { get; set; }
+        public string ClientSecret { get; set; }
     }
 }

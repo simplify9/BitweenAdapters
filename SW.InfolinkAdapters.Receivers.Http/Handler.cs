@@ -23,10 +23,12 @@ namespace SW.InfolinkAdapters.Receivers.Http
       Runner.Expect(CommonProperties.Password,  null);
       Runner.Expect(CommonProperties.Url);
       Runner.Expect(CommonProperties.Headers,  null);
+      Runner.Expect(CommonProperties.ClientId,  null);
+      Runner.Expect(CommonProperties.ClientSecret,  null);
       Runner.Expect(CommonProperties.ContentType, "application/json");
       Runner.Expect(CommonProperties.Verb, "get");
     }
-
+  
     private HttpMethod HttpMethodFromString(string method)
     {
       switch (method.ToLower())
@@ -74,6 +76,21 @@ namespace SW.InfolinkAdapters.Receivers.Http
       }
       else if (options.AuthType == "Bearer")
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.LoginPassword);
+      else if (options.AuthType == "OAuth2")
+      {
+        var oathRequest = new HttpRequestMessage(HttpMethod.Post, options.LoginUrl);
+        var oauthContentDictionary = new List<KeyValuePair<string, string>>();
+        oauthContentDictionary.Add(new KeyValuePair<string, string>("client_id", options.ClientId));
+        oauthContentDictionary.Add(new KeyValuePair<string, string>("client_secret", options.ClientSecret));
+        oauthContentDictionary.Add(new KeyValuePair<string, string>("grant_type", "client_credentials"));
+        var oauthContent = new FormUrlEncodedContent(oauthContentDictionary);
+        oathRequest.Content = oauthContent;
+        var oauthResponse = await client.SendAsync(oathRequest);
+        var res = await oauthResponse.Content.ReadAsStringAsync();
+        var resDeserialized = JsonConvert.DeserializeObject<OAuth2Response>(res);
+        client.DefaultRequestHeaders.Authorization =
+          new AuthenticationHeaderValue("Bearer", resDeserialized.access_token);
+      }
       HttpContent content = (HttpContent) null;
       if (!string.IsNullOrEmpty(Runner.StartupValueOf("DefaultRequest")))
       {
