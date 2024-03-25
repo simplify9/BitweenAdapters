@@ -27,6 +27,7 @@ namespace SW.InfolinkAdapters.Receivers.Http
       Runner.Expect(CommonProperties.ClientSecret,  null);
       Runner.Expect(CommonProperties.ContentType, "application/json");
       Runner.Expect(CommonProperties.Verb, "get");
+      Runner.Expect("DefaultRequest", null);
     }
   
     private HttpMethod HttpMethodFromString(string method)
@@ -108,7 +109,7 @@ namespace SW.InfolinkAdapters.Receivers.Http
         client.DefaultRequestHeaders.Authorization =
           new AuthenticationHeaderValue("Bearer", resDeserialized.access_token);
       }
-      HttpContent content = (HttpContent) null;
+      HttpContent content = null;
       if (!string.IsNullOrEmpty(Runner.StartupValueOf("DefaultRequest")))
       {
         string requestBody = Runner.StartupValueOf("DefaultRequest");
