@@ -40,6 +40,7 @@ namespace SW.InfolinkAdapters
         public const string PrivateKey = "PrivateKey";
         public const string ClientId = "ClientId";
         public const string ClientSecret = "ClientSecret";
+        public const string DefaultRequest = "DefaultRequest";
         public const string CorrelationId = Serverless.Sdk.Constants.CorrelationIdName;
     }
 }

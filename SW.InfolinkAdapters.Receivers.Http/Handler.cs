@@ -135,11 +135,11 @@ namespace SW.InfolinkAdapters.Receivers.Http
         Content = content
       };
       string headers1 = options.Headers;
-      IEnumerable<KeyValuePair<string, string>> headers = headers1 != null ? ( headers1.Split(',')).Select((Func<string, KeyValuePair<string, string>>) (h =>
+      IEnumerable<KeyValuePair<string, string>> headers = headers1?.Split(',').Select((Func<string, KeyValuePair<string, string>>) (h =>
       {
         string[] strArray = h.Split(':');
         return new KeyValuePair<string, string>(strArray[0], strArray[1]);
-      })) :  null;
+      }));
       if (headers != null)
       {
         foreach (KeyValuePair<string, string> keyValuePair1 in headers)
