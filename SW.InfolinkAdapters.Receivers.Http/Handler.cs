@@ -81,7 +81,7 @@ namespace SW.InfolinkAdapters.Receivers.Http
       {
         string loginJson = JsonConvert.SerializeObject(new UserLoginModel()
         {
-          Email = options.LoginUsername,
+          UserName = options.LoginUsername,
           Password = options.LoginPassword
         });
         HttpResponseMessage loginResponse = await client.PostAsync(new Uri(options.LoginUrl),
