@@ -16,9 +16,9 @@ namespace SW.InfolinkAdapters.Receivers.Http.UnitTests
         {
             var defaultRequest = JsonConvert.SerializeObject(new
             {
-                From = "2024-03-01T12:34:56.789Z",
-                To = "2024-03-26T12:34:56.789Z",
-                Entities = new[] { "ACCT", "PRCL", "BAGM", "MNFT", "CASE" }
+                // From = "2024-03-01T12:34:56.789Z",
+                // To = "2024-03-26T12:34:56.789Z",
+                // Entities = new[] { "ACCT", "PRCL", "BAGM", "MNFT", "CASE" }
             });
 
             var handler = new Handler();
@@ -26,10 +26,11 @@ namespace SW.InfolinkAdapters.Receivers.Http.UnitTests
                 new Dictionary<string, string>
                 {
                     { CommonProperties.Url,  "" },
-                    { CommonProperties.AuthType, "" },
+                    { CommonProperties.AuthType, "=" },
                     { CommonProperties.LoginUrl, "" },
                     { CommonProperties.Username, "" },
                     { CommonProperties.Password, "" },
+                    { CommonProperties.Verb, "POST" },
                     { CommonProperties.DefaultRequest, defaultRequest },
                 });
 
