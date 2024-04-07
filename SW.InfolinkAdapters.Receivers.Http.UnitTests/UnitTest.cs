@@ -26,7 +26,7 @@ namespace SW.InfolinkAdapters.Receivers.Http.UnitTests
                 new Dictionary<string, string>
                 {
                     { CommonProperties.Url,  "" },
-                    { CommonProperties.AuthType, "=" },
+                    { CommonProperties.AuthType, "" },
                     { CommonProperties.LoginUrl, "" },
                     { CommonProperties.Username, "" },
                     { CommonProperties.Password, "" },
