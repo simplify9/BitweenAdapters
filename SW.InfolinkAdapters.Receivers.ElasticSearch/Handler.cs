@@ -1,8 +1,6 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
-using Elastic.Clients.Elasticsearch;
-using Elastic.Transport;
 using Newtonsoft.Json;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;

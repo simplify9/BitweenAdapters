@@ -8,7 +8,6 @@
     </PropertyGroup>
     
     <ItemGroup>
-        <PackageReference Include="Elastic.Clients.Elasticsearch" Version="8.13.12" />
         <PackageReference Include="SimplyWorks.Serverless.Sdk" Version="6.0.26" />
     </ItemGroup>
     
