@@ -1,10 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
 using SW.InfolinkAdapters;
-using SW.InfolinkAdapters.Handlers.Sendgrid;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 

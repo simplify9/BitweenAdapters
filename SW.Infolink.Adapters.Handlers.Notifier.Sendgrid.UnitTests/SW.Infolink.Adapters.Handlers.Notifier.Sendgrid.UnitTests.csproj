@@ -16,7 +16,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\SW.InfolinkAdapters.Handlers.Sendgrid\SW.InfolinkAdapters.Handlers.Sendgrid.csproj" />
+      <ProjectReference Include="..\SW.Infolink.Adapters.Handlers.Notifier.Sendgrid\SW.Infolink.Adapters.Handlers.Notifier.Sendgrid.csproj" />
     </ItemGroup>
 
 </Project>
