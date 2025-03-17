@@ -12,10 +12,10 @@ public class UnitTest1
         var handler = new Handler();
         Runner.MockRun(handler, new ServerlessOptions(),
             new Dictionary<string, string>{ 
-                {"Host", "31231" },
-                {"PrivateKey","wgwegwegwegweg"},
-                {"Password","wegwdxs"},
-                {"Username","werweweff"},
+                {"Host", "" },
+                {"PrivateKey",Guid.NewGuid().ToString()},
+                {"Password",Guid.NewGuid().ToString()},
+                {"Username",""},
                 {"Protocol","sftpssh"},
             });
         var rs = await handler.Handle(new XchangeFile(""));
