@@ -1,13 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Rebex.Net;
-using Rebex.Security.Certificates;
 using SW.PrimitiveTypes;
 using SW.Serverless.Sdk;
 
@@ -30,22 +27,18 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
             Runner.Expect(CommonProperties.ResponseEncoding, "utf8");
             Runner.Expect(CommonProperties.DeleteMovesFileTo, null);
             Runner.Expect(CommonProperties.Protocol, "sftp");
-            Runner.Expect(CommonProperties.PrivateKey,null);
+            Runner.Expect(CommonProperties.CheckFileExistence, "true");
+            Runner.Expect(CommonProperties.RenameDuplicateFiles, "false");
         }
 
         public async Task DeleteFile(string fileId)
         {
-            if (!await _ftpOrSftp.FileExistsAsync(fileId)) return;
-            var deleteMovesFileTo = Runner.StartupValueOf("DeleteMovesFileTo");
-            if (string.IsNullOrWhiteSpace(deleteMovesFileTo))
-            {
-                await _ftpOrSftp.DeleteFileAsync(fileId);
-            }
-            else
-            {
-                await _ftpOrSftp.RenameAsync(fileId, deleteMovesFileTo + "/" + fileId);
-            }
-
+            if (bool.TryParse(Runner.StartupValueOf(CommonProperties.CheckFileExistence), out var checkFileExistence) & checkFileExistence)
+                if (!await _ftpOrSftp.FileExistsAsync(fileId)) return;
+            
+            var deleteMovesFileTo = Runner.StartupValueOf(CommonProperties.DeleteMovesFileTo);
+            if (string.IsNullOrWhiteSpace(deleteMovesFileTo)) await _ftpOrSftp.DeleteFileAsync(fileId);
+            else await _ftpOrSftp.RenameAsync(fileId, deleteMovesFileTo + "/" + fileId);
         }
 
         public async Task Finalize()
@@ -127,11 +120,43 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
         public async Task<IEnumerable<string>> ListFiles()
         {
             var files = await _ftpOrSftp.GetListAsync();
-            //fileNames[0].
             var batchSize = Convert.ToInt32(Runner.StartupValueOf(CommonProperties.BatchSize));
+            bool renameDuplicates = Runner.StartupValueOf(CommonProperties.RenameDuplicateFiles) == "true";
+    
+            var fileNames = new List<string>();
+            var nameCount = new Dictionary<string, int>();
+    
+            foreach (var file in files.Where(i => i.IsFile).Take(batchSize))
+            {
+                string originalName = file.Name;
+                string newName = originalName;
 
-            return files.Where(i => i.IsFile).Take(batchSize).Select(i => i.Name).ToArray();
+                if (renameDuplicates)
+                {
+                    if (nameCount.ContainsKey(originalName))
+                    {
+                        int counter = nameCount[originalName] + 1;
+                        string baseName = Path.GetFileNameWithoutExtension(originalName);
+                        string extension = Path.GetExtension(originalName);
+                
+                        while (fileNames.Contains(newName))
+                        {
+                            newName = $"{baseName}_{counter}{extension}";
+                            counter++;
+                        }
+                
+                        nameCount[originalName] = counter - 1;
+                    }
+                    else
+                    {
+                        nameCount[originalName] = 0;
+                    }
+                }
 
+                fileNames.Add(newName);
+            }
+
+            return fileNames;
         }
     }
 }
