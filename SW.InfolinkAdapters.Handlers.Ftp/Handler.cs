@@ -18,7 +18,7 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
             Runner.Expect(CommonProperties.Username);
             Runner.Expect(CommonProperties.Password, false, true);
             Runner.Expect(CommonProperties.TargetPath, null);
-            //Runner.Expect(CommonProperties.FileNamePrefix, null);
+            Runner.Expect(CommonProperties.FileNamePrefix, null);
             Runner.Expect(CommonProperties.Protocol, "sftp");
             Runner.Expect(CommonProperties.PrivateKey, null, true);
         }
@@ -74,7 +74,6 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
 
 
             await using var stream = new MemoryStream(Encoding.UTF8.GetBytes(xchangeFile.Data));
-            //Stream str = stream;
 
             var filename = xchangeFile.Filename;
 
@@ -85,10 +84,13 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
                     $"{currentDate.Year:0000}{currentDate.Month:00}{currentDate.Day:00}{currentDate.Hour:00}{currentDate.Minute:00}{currentDate.Second:00}{currentDate.Millisecond:000}";
             }
 
-            //if (!string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.FileNamePrefix)))
-            //    filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_";
-            //filename += Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_" + DateTime.UtcNow.Day + DateTime.UtcNow.Month + DateTime.UtcNow.Year + DateTime.UtcNow.Hour + DateTime.UtcNow.Minute + DateTime.UtcNow.Second + DateTime.UtcNow.Millisecond;
-
+            //the logic below was changed because it looked like a suffix implementation not a prefix
+            if (!string.IsNullOrWhiteSpace(Runner.StartupValueOf(CommonProperties.FileNamePrefix)))
+            {
+                var customPrefix = Runner.StartupValueOf(CommonProperties.FileNamePrefix) + "_";
+                filename = $"{customPrefix}{filename}";
+            }
+            
             var targetPath = Runner.StartupValueOf(CommonProperties.TargetPath);
             await ftpOrSftp.PutFileAsync(stream, $"{targetPath}/{filename}");
 
