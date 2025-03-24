@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Rebex.Net;
 using SW.PrimitiveTypes;
@@ -41,9 +42,11 @@ namespace SW.InfolinkAdapters.Handlers.Ftp
                     var sftpsshPort = string.IsNullOrWhiteSpace(port) ? 22 : Convert.ToInt32(port);
                     await sftpssh.ConnectAsync(host, sftpsshPort);
 
-                    var keyBytes = Encoding.UTF8.GetBytes(Runner.StartupValueOf(CommonProperties.PrivateKey));
-                    var privateKey = new SshPrivateKey(keyBytes, password);
-                    await sftpssh.LoginAsync(username, privateKey);
+                    var privateKey = Runner.StartupValueOf(CommonProperties.PrivateKey);
+                    var privateKeyEdited = Regex.Replace(privateKey, @"(?<!:)\s", "\r\n");
+                    var keyBytes = Encoding.UTF8.GetBytes(privateKeyEdited);
+                    var sshPrivateKey = new SshPrivateKey(keyBytes, password);
+                    await sftpssh.LoginAsync(username, sshPrivateKey);
 
                     ftpOrSftp = sftpssh;
                     break;

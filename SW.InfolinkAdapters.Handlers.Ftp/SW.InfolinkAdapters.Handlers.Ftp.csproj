@@ -7,8 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Rebex.Sftp" Version="5.0.7579" />
-    <PackageReference Include="Rebex.Ftp" Version="5.0.7579" />
+    <PackageReference Include="Rebex.Sftp" Version="5.0.7999" />
+    <PackageReference Include="Rebex.Ftp" Version="5.0.7999" />
   </ItemGroup>
 
   <ItemGroup>
