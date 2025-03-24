@@ -42,5 +42,7 @@ namespace SW.InfolinkAdapters
         public const string ClientSecret = "ClientSecret";
         public const string DefaultRequest = "DefaultRequest";
         public const string CorrelationId = Serverless.Sdk.Constants.CorrelationIdName;
+        public const string CheckFileExistence = nameof(CheckFileExistence);
+        public const string RenameDuplicateFiles = nameof(RenameDuplicateFiles);
     }
 }
