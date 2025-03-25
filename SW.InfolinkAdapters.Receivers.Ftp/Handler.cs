@@ -29,6 +29,7 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
             Runner.Expect(CommonProperties.Protocol, "sftp");
             Runner.Expect(CommonProperties.CheckFileExistence, "true");
             Runner.Expect(CommonProperties.RenameDuplicateFiles, "false");
+            Runner.Expect(CommonProperties.PrivateKey, null, true);
         }
 
         public async Task DeleteFile(string fileId)
