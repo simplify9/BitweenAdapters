@@ -28,6 +28,7 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
             Runner.Expect(CommonProperties.ResponseEncoding, "utf8");
             Runner.Expect(CommonProperties.DeleteMovesFileTo, null);
             Runner.Expect(CommonProperties.Protocol, "sftp");
+            Runner.Expect(CommonProperties.PrivateKey, null);
         }
 
         public async Task DeleteFile(string fileId)
