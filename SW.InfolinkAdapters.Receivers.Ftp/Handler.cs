@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Rebex.Net;
 using SW.PrimitiveTypes;
@@ -13,7 +14,6 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
     public class Handler : IInfolinkReceiver
     {
         private IFtp _ftpOrSftp;
-        // private string _targetPath = string.Empty;
 
         public Handler()
         {
@@ -33,8 +33,9 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
 
         public async Task DeleteFile(string fileId)
         {
-            if (bool.TryParse(Runner.StartupValueOf(CommonProperties.CheckFileExistence), out var checkFileExistence) & checkFileExistence)
-                if (!await _ftpOrSftp.FileExistsAsync(fileId)) return;
+            if (bool.TryParse(Runner.StartupValueOf(CommonProperties.CheckFileExistence), out var checkFileExistence) 
+                && checkFileExistence && !await _ftpOrSftp.FileExistsAsync(fileId))
+                return;
             
             var deleteMovesFileTo = Runner.StartupValueOf(CommonProperties.DeleteMovesFileTo);
             if (string.IsNullOrWhiteSpace(deleteMovesFileTo)) await _ftpOrSftp.DeleteFileAsync(fileId);
@@ -81,9 +82,11 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
                     var sftpsshPort = string.IsNullOrWhiteSpace(port) ? 22 : Convert.ToInt32(port);
                     await sftpssh.ConnectAsync(host, sftpsshPort);
                     
-                    var keyBytes =  Encoding.UTF8.GetBytes(Runner.StartupValueOf(CommonProperties.PrivateKey));
-                    var privateKey = new SshPrivateKey(keyBytes,password);
-                    await sftpssh.LoginAsync(username, privateKey);
+                    var privateKey = Runner.StartupValueOf(CommonProperties.PrivateKey);
+                    var privateKeyEdited = Regex.Replace(privateKey, @"(?<!:)\s", "\r\n");
+                    var keyBytes = Encoding.UTF8.GetBytes(privateKeyEdited);
+                    var sshPrivateKey = new SshPrivateKey(keyBytes, password);
+                    await sftpssh.LoginAsync(username, sshPrivateKey);
                     
                     _ftpOrSftp = sftpssh;
                     break;
