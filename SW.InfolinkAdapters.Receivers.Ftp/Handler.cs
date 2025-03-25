@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Rebex.Net;
 using SW.PrimitiveTypes;
@@ -14,7 +15,6 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
     public class Handler : IInfolinkReceiver
     {
         private IFtp _ftpOrSftp;
-        // private string _targetPath = string.Empty;
 
         public Handler()
         {
@@ -73,9 +73,27 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
         {
 
             Rebex.Licensing.Key = Runner.StartupValueOf(CommonProperties.LicenseKey);
+            var port = Runner.StartupValueOf(CommonProperties.Port);
+            var host = Runner.StartupValueOf(CommonProperties.Host);
+            var username = Runner.StartupValueOf(CommonProperties.Username);
+            var password = Runner.StartupValueOf(CommonProperties.Password);
 
             switch (Runner.StartupValueOf(CommonProperties.Protocol).ToLower())
             {
+                case "sftpssh":
+                    var sftpssh = new Sftp();
+                    var sftpsshPort = string.IsNullOrWhiteSpace(port) ? 22 : Convert.ToInt32(port);
+                    await sftpssh.ConnectAsync(host, sftpsshPort);
+                    
+                    var privateKey = Runner.StartupValueOf(CommonProperties.PrivateKey);
+                    var privateKeyEdited = Regex.Replace(privateKey, @"(?<!:)\s", "\r\n");
+                    var keyBytes = Encoding.UTF8.GetBytes(privateKeyEdited);
+                    var sshPrivateKey = new SshPrivateKey(keyBytes, password);
+                    await sftpssh.LoginAsync(username, sshPrivateKey);
+                    
+                    _ftpOrSftp = sftpssh;
+                    break;
+                
                 case "sftp":
 
                     var sftp = new Sftp();
@@ -101,7 +119,6 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
             // authenticate
             await _ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
 
-            //_targetPath = Runner.StartupValueOf(CommonProperties.TargetPath);
             if (!string.IsNullOrEmpty(Runner.StartupValueOf(CommonProperties.TargetPath)))
                 await _ftpOrSftp.ChangeDirectoryAsync(Runner.StartupValueOf(CommonProperties.TargetPath));
         }
