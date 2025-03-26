@@ -118,7 +118,8 @@ namespace SW.InfolinkAdapters.Receivers.Ftp
             }
 
             // authenticate
-            await _ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
+            if (!_ftpOrSftp.IsAuthenticated)
+                await _ftpOrSftp.LoginAsync(Runner.StartupValueOf(CommonProperties.Username), Runner.StartupValueOf(CommonProperties.Password));
 
             if (!string.IsNullOrEmpty(Runner.StartupValueOf(CommonProperties.TargetPath)))
                 await _ftpOrSftp.ChangeDirectoryAsync(Runner.StartupValueOf(CommonProperties.TargetPath));
